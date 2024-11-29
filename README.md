@@ -62,6 +62,14 @@ c Clear the screen
 q Quit (terminate the application on the device).
 ```
 
+## flutter refresh dependencies
+Pub is the package manager for the Dart programming language, containing reusable
+libraries & packages for Flutter and general Dart programs. The flutter pub get 
+command retrieves the `pubspec.yaml` dependencies to resolve the pubspec.
+```shell
+flutter pub get
+```
+
 ## Localizations and Language Support in Flutter
 By default, Flutter only provides US English localizations. To add support for other languages, 
 an application must specify additional `MaterialApp` (or `CupertinoApp`) properties, and include 
@@ -71,6 +79,8 @@ https://docs.flutter.dev/ui/accessibility-and-internationalization/international
 flutter pub add flutter_localizations --sdk=flutter
 flutter pub add intl:any
 ```
+
+Flutter uses App Resource Bundle (`.arb`) files to manage translations.
 
 ## material.io icon library
 Material icons have been migrated to:  
@@ -139,7 +149,9 @@ flutter doctor --android-licenses
 
 # Visual Studio Code IDE
 
-Install the Visual Studio Code IDE. Then install the Flutter extension, by "Dart Code".
+Install the Visual Studio Code IDE. Then install the Flutter extension, by "Dart Code".  
+
+Install the ARB Editor, by "Google", extension.  
 
 In the VS Code terminal, run:
 ```shell

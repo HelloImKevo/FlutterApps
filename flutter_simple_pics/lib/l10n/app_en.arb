@@ -1,0 +1,10 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "seeSomeImages": "Let's see some images!",
+  "@seeSomeImages": {
+    "description": "Message shown in the main app bar"
+  }
+}
