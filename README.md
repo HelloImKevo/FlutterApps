@@ -7,11 +7,40 @@ desktop from a single codebase. Flutter works with existing code, is used by dev
 organizations around the world, and is free and open source.  
 https://github.com/flutter/flutter  
 
+Dart SDK API documentation:  
+https://api.dart.dev/  
+
 DartPad: A lightweight web-app for building simple Dart programs.  
 https://dartpad.dev/  
 
 
+# Flutter Helpful References
+
+List available Flutter-compatible devices, emulators and simulators:
+```shell
+flutter devices
+
+# Output:
+# 4 connected devices:
+# 
+# Android SDK built for arm64 (mobile) • emulator-5554                        • android-arm64  • Android 10 (API 29) (emulator)
+# iPhone 15 (mobile)                   • 9B0982B6-13FC-4243-AC37-612C5FDE61B0 • ios            • com.apple.CoreSimulator.SimRuntime.iOS-17-2 (simulator)
+# macOS (desktop)                      • macos                                • darwin-arm64   • macOS 14.6.1 23G93 darwin-arm64
+# Chrome (web)                         • chrome                               • web-javascript • Google Chrome 131.0.6778.86
+```
+
+
 # Flutter Setup
+
+Follow the Flutter install guide here:  
+https://docs.flutter.dev/get-started/install/macos/mobile-ios  
+
+And add the unzipped Flutter framework to your shell environment path, by editing
+your `.zprofile` or `.bash_profile`:
+```shell
+# Flutter SDK
+export PATH=~/flutter/bin:${PATH}
+```
 
 After installing Flutter and the Android SDK, make sure you specify the path to your
 Android SDK using:
@@ -50,6 +79,15 @@ This software needs to be updated. Contact the developer for more information.
 ```
 
 then try running: `flutter upgrade` to update Flutter.
+
+Be sure to open Android Studio and install any necessary Android SDK Build Tools
+using the Gradle tooling framework and/or Android SDK Manager, and open XCode and
+install any required dependencies when prompted.
+
+To accept the Android SDK development licenses, you can run:
+```shell
+flutter doctor --android-licenses
+```
 
 
 # Visual Studio Code IDE
@@ -150,6 +188,13 @@ xcrun simctl boot "iPhone 15"
 
 # Launch a new default Simulator instance, or bring a Booted simulator to the
 # foreground. Example default emulator: iPhone 15 Pro Max, iOS 17.2
+open -a Simulator.app
+```
+
+Note: When you **"Boot"** an iOS simulator, it may not be brought to the foreground
+by default. If you don't see a Simulator, then you need to explicitly open the
+"Simulator App" using:
+```shell
 open -a Simulator.app
 ```
 
