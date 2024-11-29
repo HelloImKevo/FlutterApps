@@ -16,17 +16,50 @@ https://dartpad.dev/
 
 # Flutter Helpful References
 
+## flutter devices
 List available Flutter-compatible devices, emulators and simulators:
-```shell
+```
 flutter devices
 
 # Output:
-# 4 connected devices:
-# 
-# Android SDK built for arm64 (mobile) • emulator-5554                        • android-arm64  • Android 10 (API 29) (emulator)
-# iPhone 15 (mobile)                   • 9B0982B6-13FC-4243-AC37-612C5FDE61B0 • ios            • com.apple.CoreSimulator.SimRuntime.iOS-17-2 (simulator)
-# macOS (desktop)                      • macos                                • darwin-arm64   • macOS 14.6.1 23G93 darwin-arm64
-# Chrome (web)                         • chrome                               • web-javascript • Google Chrome 131.0.6778.86
+4 connected devices:
+
+Android SDK built for arm64 (mobile) • emulator-5554                        • android-arm64  • Android 10 (API 29) (emulator)
+iPhone 15 (mobile)                   • 9B0982B6-13FC-4243-AC37-612C5FDE61B0 • ios            • com.apple.CoreSimulator.SimRuntime.iOS-17-2 (simulator)
+macOS (desktop)                      • macos                                • darwin-arm64   • macOS 14.6.1 23G93 darwin-arm64
+Chrome (web)                         • chrome                               • web-javascript • Google Chrome 131.0.6778.86
+```
+
+## flutter run
+Build and run the Flutter app, on a target platform:
+```
+flutter run
+
+# Output:
+Connected devices:
+Android SDK built for arm64 (mobile) • emulator-5554 • android-arm64  • Android 10 (API 29) (emulator)
+macOS (desktop)                      • macos         • darwin-arm64   • macOS 14.6.1 23G93 darwin-arm64
+Chrome (web)                         • chrome        • web-javascript • Google Chrome 131.0.6778.86
+
+Checking for wireless devices...
+
+[1]: Android SDK built for arm64 (emulator-5554)
+[2]: iPhone 15 (9B0982B6-13FC-4243-AC37-612C5FDE61B0)
+[3]: macOS (macos)
+[4]: Chrome (chrome)
+Please choose one (or "q" to quit): 3
+Launching lib/main.dart on macOS in debug mode...
+
+Building macOS application...                                           
+Syncing files to device macOS...                                    67ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
 ```
 
 
