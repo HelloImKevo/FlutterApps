@@ -70,6 +70,13 @@ command retrieves the `pubspec.yaml` dependencies to resolve the pubspec.
 flutter pub get
 ```
 
+## flutter pub add [dependency]
+In these projects, we will use the `http` dependency. Use:
+```shell
+flutter pub add http
+```
+
+
 ## Localizations and Language Support in Flutter
 By default, Flutter only provides US English localizations. To add support for other languages, 
 an application must specify additional `MaterialApp` (or `CupertinoApp`) properties, and include 
