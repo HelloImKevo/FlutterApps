@@ -76,6 +76,11 @@ In these projects, we will use the `http` dependency. Use:
 flutter pub add http
 ```
 
+## flutter unit tests
+To run unit tests, use:
+```shell
+flutter test test/main_test.dart
+```
 
 ## Localizations and Language Support in Flutter
 By default, Flutter only provides US English localizations. To add support for other languages, 
