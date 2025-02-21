@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/image_model.dart';
+import '../dimensions.dart';
 
 /// A stateless widget that displays a list of images in a scrollable view.
 ///
@@ -49,7 +50,7 @@ class ImageList extends StatelessWidget {
             children: <Widget>[
               Image.network(images[index].url),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppDimensions.paddingSmall(context),
                 child: Text(images[index].title),
               ),
             ],
