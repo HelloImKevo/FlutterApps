@@ -71,8 +71,8 @@ class HomeScreenState extends State<HomeScreen> {
       ),
       body: ImageList(images: images),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
         onPressed: fetchImage,
+        child: const Icon(Icons.add),
       ),
     );
   }
