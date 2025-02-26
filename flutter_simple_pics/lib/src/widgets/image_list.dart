@@ -45,18 +45,29 @@ class ImageList extends StatelessWidget {
     return ListView.builder(
       itemCount: images.length,
       itemBuilder: (context, index) {
-        return Card(
-          child: Column(
-            children: <Widget>[
-              Image.network(images[index].url),
-              Padding(
-                padding: AppDimensions.paddingSmall(context),
-                child: Text(images[index].title),
-              ),
-            ],
-          ),
-        );
+        return buildImage(context, images[index]);
       },
+    );
+  }
+
+  Widget buildImage(BuildContext context, ImageModel image) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueAccent),
+            ),
+            padding: AppDimensions.paddingSmall(context),
+            margin: AppDimensions.marginMedium(context),
+            child: Image.network(image.url),
+          ),
+          Padding(
+            padding: AppDimensions.paddingSmall(context),
+            child: Text(image.title),
+          ),
+        ],
+      ),
     );
   }
 }
