@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -8,7 +9,7 @@ class App extends StatelessWidget {
     return const MaterialApp(
       title: 'Log Me In!',
       home: Scaffold(
-        body: Text('Show a form here!'),
+        body: LoginScreen(),
       ),
     );
   }
