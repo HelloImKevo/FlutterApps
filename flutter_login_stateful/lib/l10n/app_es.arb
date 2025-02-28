@@ -1,7 +1,7 @@
 {
     "helloWorld": "¡Hola Mundo!",
     "loginScreen": "Pantalla de inicio de sesión",
-    "email": "Correo electrónico",
+    "emailAddress": "Correo electrónico",
     "password": "Contraseña",
     "submit": "Enviar"
 }

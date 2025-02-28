@@ -33,11 +33,22 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Widget emailField(BuildContext context) {
-    return Text(AppLocalizations.of(context)!.email);
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.emailAddress,
+        hintText: 'you@example.com',
+      ),
+    );
   }
 
   Widget passwordField(BuildContext context) {
-    return Text(AppLocalizations.of(context)!.password);
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.password,
+        hintText: '********',
+      ),
+    );
   }
 
   Widget submitButton(BuildContext context) {

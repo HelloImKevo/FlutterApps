@@ -7,8 +7,8 @@
   "@loginScreen": {
     "description": "Title text shown for the Login Screen"
   },
-  "email": "Email",
-  "@email": {
+  "emailAddress": "Email Address",
+  "@emailAddress": {
     "description": "Shown above the Email form field"
   },
   "password": "Password",
