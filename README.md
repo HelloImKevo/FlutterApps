@@ -92,7 +92,64 @@ flutter pub add flutter_localizations --sdk=flutter
 flutter pub add intl:any
 ```
 
+Then you need to add this to the `flutter:` block in the `pubspec.yaml`:
+```yaml
+flutter:
+
+  # Required for localizations.
+  generate: true
+```
+
 Flutter uses App Resource Bundle (`.arb`) files to manage translations.
+
+Then you need to create the `lib/l10n` directory, and create two new ARB files:
+```
+app_en.arb
+app_es.arb
+```
+
+You also need to create a `l10n.yaml` file, and populate it with three lines like this:
+```yaml
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+```
+
+You may need to run `flutter pub get` to generate the `app_localizations.dart` build file.
+
+***But wait, there's more!*** You need to specify a `localizationsDelegates` element
+in your `App.build` method and a `supportedLocales` property.
+
+In order to test other languages, you can specify the `locale: const Locale('es')` property:
+```dart
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      locale: Locale('es'), // Force Spanish locale
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(),
+    );
+  }
+}
+```
+
+Lastly, you should be able to import the generated Dart file in your UI file,
+and then you can acquire a localized string resource:
+```dart
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+child: Text(AppLocalizations.of(context)!.loginScreen)
+```
 
 ## material.io icon library
 Material icons have been migrated to:  

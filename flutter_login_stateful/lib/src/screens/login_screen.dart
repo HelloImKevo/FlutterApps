@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_login_stateful/src/dimensions.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Container(
       margin: AppDimensions.marginMedium(context),
-      child: const Text('Login Screen!'),
+      child: Text(AppLocalizations.of(context)!.loginScreen),
     );
   }
 }
