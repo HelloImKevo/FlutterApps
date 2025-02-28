@@ -6,5 +6,17 @@
   "loginScreen": "Login Screen",
   "@loginScreen": {
     "description": "Title text shown for the Login Screen"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Shown above the Email form field"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Shown above the Password form field"
+  },
+  "submit": "Submit",
+  "@submit": {
+    "description": "Button text for the 'Submit' button"
   }
 }

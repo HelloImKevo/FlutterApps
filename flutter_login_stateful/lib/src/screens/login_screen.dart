@@ -16,7 +16,31 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Container(
       margin: AppDimensions.marginMedium(context),
-      child: Text(AppLocalizations.of(context)!.loginScreen),
+      // Wrap the Form widget with a ScrollView to avoid the
+      // 'overflowing RenderFlex' error when resizing the app window.
+      child: SingleChildScrollView(
+        child: Form(
+          child: Column(
+            children: [
+              emailField(context),
+              passwordField(context),
+              submitButton(context),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  Widget emailField(BuildContext context) {
+    return Text(AppLocalizations.of(context)!.email);
+  }
+
+  Widget passwordField(BuildContext context) {
+    return Text(AppLocalizations.of(context)!.password);
+  }
+
+  Widget submitButton(BuildContext context) {
+    return Text(AppLocalizations.of(context)!.submit);
   }
 }
