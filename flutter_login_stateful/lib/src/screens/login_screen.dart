@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_login_stateful/src/dimensions.dart';
+import 'package:flutter_login_stateful/src/styles/constants.dart';
+import 'package:flutter_login_stateful/src/utils/text_styles.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,6 +37,9 @@ class LoginScreenState extends State<LoginScreen> {
   Widget emailField(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
+      style: TextStyle(
+        fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
+      ),
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.emailAddress,
         hintText: 'you@example.com',
@@ -44,6 +49,10 @@ class LoginScreenState extends State<LoginScreen> {
 
   Widget passwordField(BuildContext context) {
     return TextFormField(
+      obscureText: true,
+      style: TextStyle(
+        fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
+      ),
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.password,
         hintText: '********',
