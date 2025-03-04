@@ -44,6 +44,14 @@ class LoginScreenState extends State<LoginScreen> {
   Widget emailField(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
+      validator: (String? value) {
+        if (value == null || value.isEmpty || !value.contains('@')) {
+          logger.i('emailField: Input email address is not valid');
+          // TODO: Localize this message.
+          return 'Please enter your email address.';
+        }
+        return null;
+      },
       style: TextStyle(
         fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
       ),
@@ -57,6 +65,14 @@ class LoginScreenState extends State<LoginScreen> {
   Widget passwordField(BuildContext context) {
     return TextFormField(
       obscureText: true,
+      validator: (String? value) {
+        if (value == null || value.length < 6) {
+          logger.i('passwordField: Input must be at least 6 characters');
+          // TODO: Localize this message.
+          return 'Password must be at least 6 characters.';
+        }
+        return null;
+      },
       style: TextStyle(
         fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
       ),
@@ -71,7 +87,8 @@ class LoginScreenState extends State<LoginScreen> {
     return ElevatedButton(
       onPressed: () {
         if (!formKey.currentState!.validate()) {
-          showSnackBar('Invalid input! Please review and correct.');
+          // The Form natively shows the validation error text for each field,
+          // so we don't need to show a SnackBar here.
           return;
         }
 
