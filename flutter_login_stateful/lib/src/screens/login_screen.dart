@@ -71,6 +71,8 @@ class LoginScreenState extends State<LoginScreen> {
   Widget passwordField(BuildContext context) {
     return TextFormField(
       obscureText: true,
+      autocorrect: false, // Disable auto-correct suggestions
+      enableSuggestions: false, // Disable suggestions
       validator: (String? value) {
         if (value == null || value.length < 6) {
           logger.i('passwordField: Input must be at least 6 characters');
