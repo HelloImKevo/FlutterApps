@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_login_stateful/src/dimensions.dart';
+import 'package:flutter_login_stateful/src/mixins/validation_mixin.dart';
 import 'package:flutter_login_stateful/src/styles/constants.dart';
 import 'package:flutter_login_stateful/src/utils/text_styles.dart';
 
@@ -16,7 +17,7 @@ class LoginScreen extends StatefulWidget {
   }
 }
 
-class LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> with ValidationMixin {
   final formKey = GlobalKey<FormState>();
 
   String? email;
@@ -47,14 +48,10 @@ class LoginScreenState extends State<LoginScreen> {
   Widget emailField(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      validator: (String? value) {
-        if (value == null || value.isEmpty || !value.contains('@')) {
-          logger.i('emailField: Input email address is not valid');
-          // TODO: Localize this message.
-          return 'Please enter your email address.';
-        }
-        return null;
-      },
+      // The validateEmail method from ValidationMixin is used as the validator.
+      // This is a function reference (or function pointer) that will be called
+      // when the form is validated.
+      validator: validateEmail,
       onSaved: (String? value) {
         email = value;
       },
@@ -73,14 +70,10 @@ class LoginScreenState extends State<LoginScreen> {
       obscureText: true,
       autocorrect: false, // Disable auto-correct suggestions
       enableSuggestions: false, // Disable suggestions
-      validator: (String? value) {
-        if (value == null || value.length < 6) {
-          logger.i('passwordField: Input must be at least 6 characters');
-          // TODO: Localize this message.
-          return 'Password must be at least 6 characters.';
-        }
-        return null;
-      },
+      // The validatePassword method from ValidationMixin is used as the validator.
+      // This is a function reference (or function pointer) that will be called
+      // when the form is validated.
+      validator: validatePassword,
       onSaved: (String? value) {
         password = value;
       },
