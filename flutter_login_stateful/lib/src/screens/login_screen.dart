@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter_login_stateful/src/dimensions.dart';
 import 'package:flutter_login_stateful/src/styles/constants.dart';
 import 'package:flutter_login_stateful/src/utils/text_styles.dart';
+
+final logger = Logger();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,6 +27,7 @@ class LoginScreenState extends State<LoginScreen> {
       // 'overflowing RenderFlex' error when resizing the app window.
       child: SingleChildScrollView(
         child: Form(
+          key: formKey,
           child: Column(
             children: [
               emailField(context),
@@ -63,11 +69,31 @@ class LoginScreenState extends State<LoginScreen> {
 
   Widget submitButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        if (!formKey.currentState!.validate()) {
+          showSnackBar('Invalid input! Please review and correct.');
+          return;
+        }
+
+        // TODO: Implement form submission logic.
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
       ),
       child: Text(AppLocalizations.of(context)!.submit),
+    );
+  }
+
+  void showSnackBar(String message) {
+    logger.w(message);
+
+    // Check if the widget is still mounted before attempting to show a SnackBar.
+    // This is necessary because the fetchImage function is asynchronous and the
+    // widget might have been disposed of before the function completes.
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }
