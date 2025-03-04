@@ -26,6 +26,7 @@ class LoginScreenState extends State<LoginScreen> {
             children: [
               emailField(context),
               passwordField(context),
+              Container(margin: AppDimensions.marginMedium(context)),
               submitButton(context),
             ],
           ),
@@ -61,6 +62,12 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Widget submitButton(BuildContext context) {
-    return Text(AppLocalizations.of(context)!.submit);
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      child: Text(AppLocalizations.of(context)!.submit),
+    );
   }
 }
