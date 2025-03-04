@@ -19,6 +19,9 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
 
+  String? email;
+  String? password;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,6 +55,9 @@ class LoginScreenState extends State<LoginScreen> {
         }
         return null;
       },
+      onSaved: (String? value) {
+        email = value;
+      },
       style: TextStyle(
         fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
       ),
@@ -73,6 +79,9 @@ class LoginScreenState extends State<LoginScreen> {
         }
         return null;
       },
+      onSaved: (String? value) {
+        password = value;
+      },
       style: TextStyle(
         fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
       ),
@@ -92,7 +101,10 @@ class LoginScreenState extends State<LoginScreen> {
           return;
         }
 
-        // TODO: Implement form submission logic.
+        logger.d('✅ submitButton: Form is valid');
+        formKey.currentState!.save();
+
+        logger.d('🚀 Time to POST $email and $password to the API');
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
