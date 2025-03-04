@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
@@ -21,20 +22,47 @@ class HomeScreenState extends State<HomeScreen> {
   int counter = 0;
   List<ImageModel> images = [];
 
+  // In Dart, the async and await keywords are used to handle asynchronous
+  // operations. When you use await in an async function, Dart does not block
+  // the main thread. Instead, it allows other code to run while waiting for
+  // the asynchronous operation to complete. This means that the network call
+  // in the fetchImage function is not blocking the main thread, even though
+  // it appears to be running on the main thread.
+
+  // However, if you want to explicitly offload the network call to a background
+  // thread, you can use the compute function from the flutter/foundation.dart
+  // package. The compute function runs the provided function in a background
+  // isolate and returns the result to the main isolate.
+
+  // Function to perform the network call and parse the response
+  static Future<ImageModel> fetchImageFromNetwork(int counter) async {
+    String url = 'https://jsonplaceholder.typicode.com/photos/$counter';
+    http.Response response = await http.get(Uri.parse(url));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load image');
+    }
+
+    return ImageModel.fromJson(json.decode(response.body));
+  }
+
   void fetchImage() async {
     counter++;
 
     String url = 'https://jsonplaceholder.typicode.com/photos/$counter';
 
     try {
-      http.Response response = await http.get(Uri.parse(url));
+      // Use compute to run fetchImageFromNetwork in a background isolate.
+      ImageModel imageModel = await compute(fetchImageFromNetwork, counter);
 
-      if (response.statusCode != 200) {
-        showSnackBar('Failed to load image');
-        return;
-      }
+      // http.Response response = await http.get(Uri.parse(url));
 
-      var imageModel = ImageModel.fromJson(json.decode(response.body));
+      // if (response.statusCode != 200) {
+      //   showSnackBar('Failed to load image');
+      //   return;
+      // }
+
+      // var imageModel = ImageModel.fromJson(json.decode(response.body));
 
       logger.d("Image loaded: ${imageModel.url}");
 
