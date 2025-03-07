@@ -156,6 +156,129 @@ Material icons have been migrated to:
 https://fonts.google.com/icons  
 
 
+## BLoC Pattern in Flutter
+
+The BLoC (Business Logic Component) pattern is a design pattern used in Flutter to manage state and 
+separate business logic from the UI. It helps in creating a scalable and maintainable codebase by 
+promoting a clear separation of concerns.
+
+### Key Concepts
+
+1. **Streams**: Streams are a core part of the BLoC pattern. They allow asynchronous communication 
+   between different parts of the app. A stream can be thought of as a pipeline that carries data 
+   from one place to another.
+
+2. **Sinks**: Sinks are the entry points for data into a stream. You can add data to a stream by 
+   adding it to a sink.
+
+3. **BLoC**: The BLoC itself is a class that contains the business logic of the app. It exposes 
+   streams and sinks to the UI, allowing the UI to react to changes in the data.
+
+4. **StreamBuilder**: The `StreamBuilder` widget is used to listen to a stream and rebuild the UI 
+   whenever new data is emitted by the stream.
+
+### Benefits of the BLoC Pattern
+
+- **Separation of Concerns**: By separating business logic from the UI, the BLoC pattern makes the 
+  codebase more modular and easier to maintain.
+- **Testability**: Business logic can be tested independently of the UI, making it easier to write 
+  unit tests.
+- **Reusability**: BLoCs can be reused across different parts of the app, reducing code duplication.
+
+### Example
+
+Here's a simple example of how the BLoC pattern can be implemented in Flutter:
+
+1. **Create a BLoC Class**:
+
+```dart
+import 'dart:async';
+
+class CounterBloc {
+  int _counter = 0;
+
+  // StreamController to manage the stream and sink
+  final _counterController = StreamController<int>();
+
+  // Stream to expose the counter value
+  Stream<int> get counterStream => _counterController.stream;
+
+  // Function to increment the counter
+  void increment() {
+    _counter++;
+    _counterController.sink.add(_counter);
+  }
+
+  // Dispose the StreamController when done
+  void dispose() {
+    _counterController.close();
+  }
+}
+```
+
+2. **Use the BLoC in the UI**:
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CounterScreen(),
+    );
+  }
+}
+
+class CounterScreen extends StatelessWidget {
+  final CounterBloc _bloc = CounterBloc();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('BLoC Pattern Example'),
+      ),
+      body: Center(
+        child: StreamBuilder<int>(
+          stream: _bloc.counterStream,
+          initialData: 0,
+          builder: (context, snapshot) {
+            return Text(
+              'Counter: ${snapshot.data}',
+              style: TextStyle(fontSize: 24),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _bloc.increment,
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+}
+```
+
+In this example, the `CounterBloc` class manages the counter state and exposes a stream of counter 
+values. The `CounterScreen` widget listens to the stream using a `StreamBuilder` and rebuilds the UI 
+whenever the counter value changes. The `FloatingActionButton` increments the counter by calling the 
+`increment` method on the BLoC.
+
+By using the BLoC pattern, you can keep your business logic separate from your UI, making your code 
+more modular, testable, and maintainable.
+
+
 # Flutter Setup
 
 Follow the Flutter install guide here:  
