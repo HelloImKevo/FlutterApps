@@ -2,104 +2,94 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_login_stateful/src/dimensions.dart';
-import 'package:flutter_login_stateful/src/mixins/validation_mixin.dart';
+import 'package:flutter_login_stateful/src/blocs/bloc.dart';
 import 'package:flutter_login_stateful/src/styles/constants.dart';
 import 'package:flutter_login_stateful/src/utils/text_styles.dart';
 
 final logger = Logger();
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() {
-    return LoginScreenState();
-  }
-}
-
-class LoginScreenState extends State<LoginScreen> with ValidationMixin {
-  final formKey = GlobalKey<FormState>();
-
-  String? email;
-  String? password;
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: AppDimensions.marginMedium(context),
-      // Wrap the Form widget with a ScrollView to avoid the
-      // 'overflowing RenderFlex' error when resizing the app window.
-      child: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              emailField(context),
-              passwordField(context),
-              Container(margin: AppDimensions.marginMedium(context)),
-              submitButton(context),
-            ],
+    // Declare our Login Business Logic Component.
+    final bloc = LoginBloc();
+
+    // The Scaffold widget is a fundamental part of the Material Design layout
+    // structure in Flutter. It provides a default structure for the visual
+    //interface of your app, including the app bar, drawer, bottom navigation
+    //bar, and floating action button. It also provides the ScaffoldMessenger
+    //for displaying snack bars.
+    return Scaffold(
+      body: Container(
+        margin: AppDimensions.marginMedium(context),
+        // Wrap the Form widget with a ScrollView to avoid the
+        // 'overflowing RenderFlex' error when resizing the app window.
+        child: SingleChildScrollView(
+          child: Form(
+            child: Column(
+              children: [
+                emailField(bloc, context),
+                passwordField(bloc, context),
+                Container(margin: AppDimensions.marginMedium(context)),
+                submitButton(bloc, context),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget emailField(BuildContext context) {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      // The validateEmail method from ValidationMixin is used as the validator.
-      // This is a function reference (or function pointer) that will be called
-      // when the form is validated.
-      validator: validateEmail,
-      onSaved: (String? value) {
-        email = value;
+  Widget emailField(LoginBloc bloc, BuildContext context) {
+    return StreamBuilder<String>(
+      stream: bloc.email,
+      builder: (context, snapshot) {
+        return TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          onChanged: bloc.changeEmail,
+          style: TextStyle(
+            fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
+          ),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.emailAddress,
+            hintText: 'you@example.com',
+            errorText: snapshot.error as String?,
+          ),
+        );
       },
-      style: TextStyle(
-        fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
-      ),
-      decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.emailAddress,
-        hintText: 'you@example.com',
-      ),
     );
   }
 
-  Widget passwordField(BuildContext context) {
-    return TextFormField(
-      obscureText: true,
-      autocorrect: false, // Disable auto-correct suggestions
-      enableSuggestions: false, // Disable suggestions
-      // The validatePassword method from ValidationMixin is used as the validator.
-      // This is a function reference (or function pointer) that will be called
-      // when the form is validated.
-      validator: validatePassword,
-      onSaved: (String? value) {
-        password = value;
+  Widget passwordField(LoginBloc bloc, BuildContext context) {
+    return StreamBuilder<String>(
+      stream: bloc.password,
+      builder: (context, snapshot) {
+        return TextFormField(
+          obscureText: true,
+          autocorrect: false, // Disable auto-correct suggestions
+          enableSuggestions: false, // Disable suggestions
+          onChanged: bloc.changePassword,
+          style: TextStyle(
+            fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
+          ),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.password,
+            hintText: '********',
+            errorText: snapshot.error as String?,
+          ),
+        );
       },
-      style: TextStyle(
-        fontSize: getScaledFontSize(context, FontSizes.baseFontSize),
-      ),
-      decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.password,
-        hintText: '********',
-      ),
     );
   }
 
-  Widget submitButton(BuildContext context) {
+  Widget submitButton(LoginBloc bloc, BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        if (!formKey.currentState!.validate()) {
-          // The Form natively shows the validation error text for each field,
-          // so we don't need to show a SnackBar here.
-          return;
-        }
-
-        logger.d('✅ submitButton: Form is valid');
-        formKey.currentState!.save();
-
-        logger.d('🚀 Time to POST $email and $password to the API');
+        // Form has been validated by our BLoC streams.
+        logger.d('🚀 Time to POST email and password to the API');
+        showSnackBar(context, 'Form submitted');
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
@@ -108,13 +98,12 @@ class LoginScreenState extends State<LoginScreen> with ValidationMixin {
     );
   }
 
-  void showSnackBar(String message) {
+  void showSnackBar(BuildContext context, String message) {
     logger.w(message);
 
-    // Check if the widget is still mounted before attempting to show a SnackBar.
-    // This is necessary because the fetchImage function is asynchronous and the
-    // widget might have been disposed of before the function completes.
-    if (!mounted) return;
+    // In a StatelessWidget, there is no 'mounted' property, because the widget
+    // does not have a lifecycle like StatefulWidget. The 'mounted' property
+    // is used in State objects to check if the widget is still in the tree.
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
