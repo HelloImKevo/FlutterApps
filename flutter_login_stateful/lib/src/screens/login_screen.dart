@@ -5,6 +5,7 @@ import 'package:flutter_login_stateful/src/dimensions.dart';
 import 'package:flutter_login_stateful/src/blocs/bloc.dart';
 import 'package:flutter_login_stateful/src/styles/constants.dart';
 import 'package:flutter_login_stateful/src/utils/text_styles.dart';
+import '../blocs/provider.dart';
 
 final logger = Logger();
 
@@ -13,14 +14,14 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Declare our Login Business Logic Component.
-    final bloc = LoginBloc();
+    // Acquire our Login Business Logic Component.
+    final bloc = Provider.of(context);
 
     // The Scaffold widget is a fundamental part of the Material Design layout
     // structure in Flutter. It provides a default structure for the visual
-    //interface of your app, including the app bar, drawer, bottom navigation
-    //bar, and floating action button. It also provides the ScaffoldMessenger
-    //for displaying snack bars.
+    // interface of your app, including the app bar, drawer, bottom navigation
+    // bar, and floating action button. It also provides the ScaffoldMessenger
+    // for displaying snack bars.
     return Scaffold(
       body: Container(
         margin: AppDimensions.marginMedium(context),
