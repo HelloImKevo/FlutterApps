@@ -9,9 +9,22 @@ import '../blocs/provider.dart';
 
 final logger = Logger();
 
+/// The `LoginScreen` class represents the login screen of the application.
+/// It extends the `StatelessWidget` class, which means it does not have any
+/// mutable state.
 class LoginScreen extends StatelessWidget {
+  /// The constructor for the `LoginScreen` class.
+  ///
+  /// It calls the `super` constructor with an optional key parameter.
   const LoginScreen({super.key});
 
+  /// The `build` method describes the part of the user interface represented
+  /// by this widget.
+  ///
+  /// It returns a `Scaffold` widget that contains the login form.
+  ///
+  /// - `context`: The build context of the widget.
+  /// - Returns: A `Scaffold` widget that contains the login form.
   @override
   Widget build(BuildContext context) {
     // Acquire our Login Business Logic Component.
@@ -43,6 +56,15 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// The `emailField` function creates a text field for entering the email
+  /// address.
+  ///
+  /// It uses a `StreamBuilder` to listen to the email stream from the `LoginBloc`
+  /// and display validation errors if any.
+  ///
+  /// - `bloc`: The `LoginBloc` instance that manages the email stream.
+  /// - `context`: The build context of the widget.
+  /// - Returns: A `TextFormField` widget for entering the email address.
   Widget emailField(LoginBloc bloc, BuildContext context) {
     return StreamBuilder<String>(
       stream: bloc.email,
@@ -63,6 +85,14 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// The `passwordField` function creates a text field for entering the password.
+  ///
+  /// It uses a `StreamBuilder` to listen to the password stream from the `LoginBloc`
+  /// and display validation errors if any.
+  ///
+  /// - `bloc`: The `LoginBloc` instance that manages the password stream.
+  /// - `context`: The build context of the widget.
+  /// - Returns: A `TextFormField` widget for entering the password.
   Widget passwordField(LoginBloc bloc, BuildContext context) {
     return StreamBuilder<String>(
       stream: bloc.password,
@@ -85,6 +115,14 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// The `submitButton` function creates a button for submitting the login form.
+  ///
+  /// When the button is pressed, it logs a message and shows a snack bar
+  /// indicating that the form has been submitted.
+  ///
+  /// - `bloc`: The `LoginBloc` instance that manages the form submission.
+  /// - `context`: The build context of the widget.
+  /// - Returns: An `ElevatedButton` widget for submitting the login form.
   Widget submitButton(LoginBloc bloc, BuildContext context) {
     return ElevatedButton(
       onPressed: () {
@@ -99,6 +137,10 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// The `showSnackBar` function displays a snack bar with a given message.
+  ///
+  /// - `context`: The build context of the widget.
+  /// - `message`: The message to be displayed in the snack bar.
   void showSnackBar(BuildContext context, String message) {
     logger.w(message);
 
