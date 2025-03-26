@@ -26,11 +26,43 @@ class LoginBloc with ValidationMixin {
   /// A function that adds a new email address to the email stream.
   ///
   /// This function is used to change the email value.
+  ///
+  /// The `Function(String)` syntax in Dart defines a type for a function that
+  /// takes a `String` argument and returns nothing (void). This is similar to:
+  /// - **Kotlin**: A function type `(String) -> Unit`, which defines a function
+  ///   that takes a `String` argument and returns `Unit` (void).
+  /// - **Java**: A functional interface with a single abstract method that takes
+  ///   a `String` argument and returns nothing, implemented using a lambda
+  ///   expression.
+  ///
+  /// This allows the `changeEmail` function to be passed around as a variable,
+  /// making the code more flexible and modular.
+  ///
+  /// The implementation uses Dart's shorthand syntax for defining a function
+  /// that forwards its argument to another function. This is a concise way to
+  /// define a function that simply calls another function with the same
+  /// argument.
   Function(String) get changeEmail => _emailController.sink.add;
 
   /// A function that adds a new password to the password stream.
   ///
   /// This function is used to change the password value.
+  ///
+  /// The `Function(String)` syntax in Dart defines a type for a function that
+  /// takes a `String` argument and returns nothing (void). This is similar to:
+  /// - **Kotlin**: A function type `(String) -> Unit`, which defines a function
+  ///   that takes a `String` argument and returns `Unit` (void).
+  /// - **Java**: A functional interface with a single abstract method that takes
+  ///   a `String` argument and returns nothing, implemented using a lambda
+  ///   expression.
+  ///
+  /// This allows the `changePassword` function to be passed around as a variable,
+  /// making the code more flexible and modular.
+  ///
+  /// The implementation uses Dart's shorthand syntax for defining a function
+  /// that forwards its argument to another function. This is a concise way to
+  /// define a function that simply calls another function with the same
+  /// argument.
   Function(String) get changePassword => _passwordController.sink.add;
 
   /// Closes the email and password stream controllers.
