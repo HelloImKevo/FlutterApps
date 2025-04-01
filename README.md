@@ -71,9 +71,16 @@ flutter pub get
 ```
 
 ## flutter pub add [dependency]
-In these projects, we will use the `http` dependency. Use:
+In these projects, we will use the `http` and `rxdart` dependencies. Use:
 ```shell
 flutter pub add http
+
+flutter pub add rxdart
+```
+
+Then run:
+```
+flutter packages get
 ```
 
 ## flutter unit tests
