@@ -8,6 +8,13 @@ import 'package:rxdart/rxdart.dart';
 /// and provides streams for these inputs. It also provides methods to change
 /// the email and password values.
 class LoginBloc with ValidationMixin {
+  /// The `_emailController` and `_passwordController` are `StreamController`s
+  /// configured with the `broadcast` variant. This allows multiple listeners
+  /// to simultaneously subscribe to the stream, which is essential in scenarios
+  /// where multiple widgets or components need to react to the same stream of
+  /// data. Without `broadcast`, a `StreamController` can only have a single
+  /// listener, which would limit the flexibility and reusability of the streams
+  /// in a reactive UI framework like Flutter.
   final _emailController = StreamController<String>.broadcast();
   final _passwordController = StreamController<String>.broadcast();
 
