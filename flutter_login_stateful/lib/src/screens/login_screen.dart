@@ -124,17 +124,28 @@ class LoginScreen extends StatelessWidget {
   /// - `context`: The build context of the widget.
   /// - Returns: An `ElevatedButton` widget for submitting the login form.
   Widget submitButton(LoginBloc bloc, BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        // Form has been validated by our BLoC streams.
-        logger.d('🚀 Time to POST email and password to the API');
-        showSnackBar(context, 'Form submitted');
+    return StreamBuilder<bool>(
+      stream: bloc.submitValid,
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        return ElevatedButton(
+          onPressed: snapshot.hasData
+              ? () {
+                  submit(bloc, context);
+                }
+              : null, // Disable the button if `snapshot.hasData` is false
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          child: Text(AppLocalizations.of(context)!.submit),
+        );
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      child: Text(AppLocalizations.of(context)!.submit),
     );
+  }
+
+  void submit(LoginBloc bloc, BuildContext context) {
+    // Form has been validated by our BLoC streams.
+    logger.d('🚀 Time to POST email and password to the API');
+    showSnackBar(context, 'Form submitted');
   }
 
   /// The `showSnackBar` function displays a snack bar with a given message.

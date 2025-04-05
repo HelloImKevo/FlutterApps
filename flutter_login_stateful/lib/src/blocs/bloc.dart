@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_login_stateful/src/mixins/validation_mixin.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// A BLoC (Business Logic Component) for handling the login functionality.
 ///
@@ -22,6 +23,15 @@ class LoginBloc with ValidationMixin {
   /// to validate the passwords.
   Stream<String> get password =>
       _passwordController.stream.transform(validatePassword);
+
+  /// A stream that combines the email and password streams to determine if
+  /// the login form is valid.
+  /// See also: https://rxmarbles.com/#combineLatest
+  Stream<bool> get submitValid => Rx.combineLatest2(
+        email,
+        password,
+        (String e, String p) => true,
+      );
 
   /// A function that adds a new email address to the email stream.
   ///
