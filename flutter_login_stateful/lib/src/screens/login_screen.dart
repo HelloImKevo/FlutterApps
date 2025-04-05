@@ -130,7 +130,8 @@ class LoginScreen extends StatelessWidget {
         return ElevatedButton(
           onPressed: snapshot.hasData
               ? () {
-                  submit(bloc, context);
+                  showSnackBar(context, 'Submitting form...');
+                  bloc.submit();
                 }
               : null, // Disable the button if `snapshot.hasData` is false
           style: ElevatedButton.styleFrom(
@@ -140,12 +141,6 @@ class LoginScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  void submit(LoginBloc bloc, BuildContext context) {
-    // Form has been validated by our BLoC streams.
-    logger.d('🚀 Time to POST email and password to the API');
-    showSnackBar(context, 'Form submitted');
   }
 
   /// The `showSnackBar` function displays a snack bar with a given message.

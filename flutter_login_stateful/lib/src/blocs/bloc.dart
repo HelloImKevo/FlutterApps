@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_login_stateful/src/mixins/validation_mixin.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// A BLoC (Business Logic Component) for handling the login functionality.
@@ -8,6 +9,8 @@ import 'package:rxdart/rxdart.dart';
 /// and provides streams for these inputs. It also provides methods to change
 /// the email and password values.
 class LoginBloc with ValidationMixin {
+  final logger = Logger();
+
   /// The `_emailController` and `_passwordController` are `StreamController`s
   /// configured with the `broadcast` variant. This allows multiple listeners
   /// to simultaneously subscribe to the stream, which is essential in scenarios
@@ -15,8 +18,8 @@ class LoginBloc with ValidationMixin {
   /// data. Without `broadcast`, a `StreamController` can only have a single
   /// listener, which would limit the flexibility and reusability of the streams
   /// in a reactive UI framework like Flutter.
-  final _emailController = StreamController<String>.broadcast();
-  final _passwordController = StreamController<String>.broadcast();
+  final _emailController = BehaviorSubject<String>();
+  final _passwordController = BehaviorSubject<String>();
 
   /// A stream that provides validated email addresses.
   ///
@@ -81,6 +84,28 @@ class LoginBloc with ValidationMixin {
   /// define a function that simply calls another function with the same
   /// argument.
   Function(String) get changePassword => _passwordController.sink.add;
+
+  void submit() {
+    // Form has been validated by our BLoC streams.
+    logger.d('🚀 Time to POST email and password to the API');
+    final validEmail = _emailController.value;
+    final validPassword = _passwordController.value;
+    login(validEmail, validPassword);
+    logger.d('Logging in...');
+  }
+
+  void login(String email, String password) async {
+    logger.d('Starting login process...');
+
+    // Simulate a long-running process with a 2-second delay.
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Replace the password with asterisks of the same length.
+    final maskedPassword = '*' * password.length;
+
+    // Log the success message after the delay.
+    logger.d("Logged in with email: $email and password: $maskedPassword");
+  }
 
   /// Closes the email and password stream controllers.
   ///
