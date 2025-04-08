@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/cat.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,7 +14,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Cat Animation',
+          'AppBar: Animation!',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -22,6 +23,11 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
+      body: buildAnimation(),
     );
+  }
+
+  Widget buildAnimation() {
+    return const Cat();
   }
 }
