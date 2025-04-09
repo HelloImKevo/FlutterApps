@@ -27,6 +27,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         curve: Curves.easeIn,
       ),
     );
+
+    // Start / play the animation.
+    catController.forward();
   }
 
   @override
