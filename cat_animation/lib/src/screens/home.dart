@@ -32,6 +32,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     catController.forward();
   }
 
+  void onTapGesture() {
+    // Restart the animation.
+    catController.reset();
+    catController.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +52,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
-      body: buildAnimation(),
+      body: GestureDetector(
+        onTap: onTapGesture,
+        child: Center(
+          child: buildAnimation(),
+        ),
+      ),
     );
   }
 
@@ -55,10 +66,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       animation: catAnimation,
       builder: (context, child) {
         return Container(
-          child: child,
           margin: EdgeInsets.only(
             top: catAnimation.value,
           ),
+          child: child,
         );
       },
       child: const Cat(),
