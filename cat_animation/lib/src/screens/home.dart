@@ -33,9 +33,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void onTapGesture() {
-    // Restart the animation.
-    catController.reset();
-    catController.forward();
+    if (catController.status == AnimationStatus.completed) {
+      // Reverse the animation.
+      catController.reverse();
+    } else if (catController.status == AnimationStatus.dismissed) {
+      // Forward the animation.
+      catController.forward();
+    }
   }
 
   @override
