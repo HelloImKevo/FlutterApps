@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/rendering.dart';
+
 import 'src/app.dart';
 
 // TODO: This strategy only works for Android emulators currently.
@@ -22,5 +24,9 @@ void main() {
   if (kDebugMode) {
     HttpOverrides.global = DebugSSLHandshakeHttpOverrides();
   }
+  // Causes each RenderBox to paint a box around its bounds, and some
+  // extra boxes, such as [RenderPadding], to draw construction lines.
+  debugPaintSizeEnabled = true;
+
   runApp(const App());
 }
