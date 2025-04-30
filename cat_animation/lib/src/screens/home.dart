@@ -13,9 +13,33 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   late AnimationController catController;
   late Animation<double> catAnimation;
 
+  late Animation<double> boxAnimation;
+  late AnimationController boxController;
+
   @override
   void initState() {
     super.initState();
+
+    boxController = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+
+    boxAnimation = Tween(
+      // Angles as Radians.
+      begin: math.pi * 0.6,
+      end: math.pi * 0.65,
+    ).animate(
+      CurvedAnimation(
+        parent: boxController,
+        curve: Curves.linear,
+      ),
+    );
+
+    applyBoxAnimationStatusListener(boxAnimation);
+
+    // Start / play the Cardboard Box animation.
+    boxController.forward();
 
     catController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -31,6 +55,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     // Start / play the animation.
     catController.forward();
+  }
+
+  void applyBoxAnimationStatusListener(Animation<double> inputBoxAnimation) {
+    inputBoxAnimation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Reverse the animation.
+        boxController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        // Forward the animation.
+        boxController.forward();
+      }
+    });
   }
 
   void onTapGesture() {
@@ -102,18 +138,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       // main box (rather than a sub-1-pixel corner-connection).
       left: 3.0,
       top: 0.0,
-      // Rotations occur around the center-point of the Widget, by default.
-      child: Transform.rotate(
-        // Change the pivot point to top-left corner of the rectangle.
-        alignment: Alignment.topLeft,
-        // Ref: 3.14 / 2.0
-        // pi is referenced in dart:math
-        angle: math.pi * 0.6,
+      child: AnimatedBuilder(
+        animation: boxAnimation,
         child: Container(
           width: 125.0,
           height: 10.0,
           color: Colors.brown,
         ),
+        builder: (context, child) {
+          // Rotations occur around the center-point of the Widget, by default.
+          return Transform.rotate(
+            // Change the pivot point to top-left corner of the rectangle.
+            alignment: Alignment.topLeft,
+            angle: boxAnimation.value,
+            // The rectangle Container.
+            child: child,
+          );
+        },
       ),
     );
   }
