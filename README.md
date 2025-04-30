@@ -286,6 +286,13 @@ By using the BLoC pattern, you can keep your business logic separate from your U
 more modular, testable, and maintainable.
 
 
+# Live Action Screenshots
+
+|                     Cat Animation                   |
+|:---------------------------------------------------:|
+|  ![Cat Animation](screenshots/cat-animation-1.png)  |
+
+
 # Flutter Setup
 
 Follow the Flutter install guide here:  
