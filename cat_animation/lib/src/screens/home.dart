@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/cat.dart';
+import 'dart:math' as math;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -65,6 +66,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             children: [
               buildCatAnimation(),
               buildBox(),
+              buildLeftFlap(),
+              buildRightFlap(),
             ],
           ),
         ),
@@ -90,6 +93,36 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       width: 200.0,
       height: 200.0,
       color: Colors.brown,
+    );
+  }
+
+  Widget buildLeftFlap() {
+    return Positioned(
+      // Make the cardboard flap appear like it is connected to the
+      // main box (rather than a sub-1-pixel corner-connection).
+      left: 3.0,
+      top: 0.0,
+      // Rotations occur around the center-point of the Widget, by default.
+      child: Transform.rotate(
+        // Change the pivot point to top-left corner of the rectangle.
+        alignment: Alignment.topLeft,
+        // Ref: 3.14 / 2.0
+        // pi is referenced in dart:math
+        angle: math.pi * 0.6,
+        child: Container(
+          width: 125.0,
+          height: 10.0,
+          color: Colors.brown,
+        ),
+      ),
+    );
+  }
+
+  Widget buildRightFlap() {
+    return Container(
+      width: 125.0,
+      height: 10.0,
+      color: Colors.red,
     );
   }
 }
