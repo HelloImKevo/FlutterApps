@@ -17,7 +17,6 @@ class ItemModel {
   final String? url;
   final int? score;
   final String? title;
-  final List<int>? parts;
   final int? descendants;
 
   /// Constructor for the `ItemModel` class.
@@ -36,7 +35,6 @@ class ItemModel {
     this.url,
     this.score,
     this.title,
-    this.parts,
     this.descendants,
   });
 
@@ -55,7 +53,6 @@ class ItemModel {
       url: json['url'],
       score: json['score'],
       title: json['title'],
-      parts: (json['parts'] as List<dynamic>?)?.cast<int>(),
       descendants: json['descendants'],
     );
   }
@@ -75,7 +72,6 @@ class ItemModel {
       'url': url,
       'score': score,
       'title': title,
-      'parts': parts,
       'descendants': descendants,
     };
   }
@@ -95,7 +91,6 @@ class ItemModel {
     String? url,
     int? score,
     String? title,
-    List<int>? parts,
     int? descendants,
   }) {
     return ItemModel(
@@ -111,7 +106,6 @@ class ItemModel {
       url: url ?? this.url,
       score: score ?? this.score,
       title: title ?? this.title,
-      parts: parts ?? this.parts,
       descendants: descendants ?? this.descendants,
     );
   }

@@ -36,7 +36,6 @@ void main() {
         url: 'https://example.com',
         score: 100,
         title: 'Test Story',
-        parts: null,
         descendants: 10,
       );
 
@@ -57,7 +56,6 @@ void main() {
         'url': 'https://example.com',
         'score': 100,
         'title': 'Test Story',
-        'parts': null,
         'descendants': 10,
       };
       expect(json.decode(jsonString), expectedJson);
@@ -78,7 +76,6 @@ void main() {
         'url': 'https://example.com',
         'score': 100,
         'title': 'Test Story',
-        'parts': null,
         'descendants': 10,
       });
 
@@ -98,7 +95,6 @@ void main() {
       expect(item.url, 'https://example.com');
       expect(item.score, 100);
       expect(item.title, 'Test Story');
-      expect(item.parts, null);
       expect(item.descendants, 10);
     });
   });
