@@ -12,7 +12,7 @@ class NewsApiProvider {
 
   fetchTopIds() async {
     String url = '$_baseUrl/topstories.json';
-    final response = await http.get(Uri.parse(url));
+    final response = await client.get(Uri.parse(url));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to load top IDs');
@@ -29,7 +29,7 @@ class NewsApiProvider {
 
   fetchItem(int id) async {
     String url = '$_baseUrl/item/$id.json';
-    final response = await http.get(Uri.parse(url));
+    final response = await client.get(Uri.parse(url));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to fetch item with id: $id');
