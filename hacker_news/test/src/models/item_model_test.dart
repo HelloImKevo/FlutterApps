@@ -13,7 +13,7 @@ import 'dart:convert';
 /// - **From the Command Line**:
 ///   Run the following command in the terminal:
 ///   ```bash
-///   flutter test test/item_model_test.dart
+///   flutter test test/src/models/item_model_test.dart
 ///   ```
 ///
 /// - **From Visual Studio Code**:
