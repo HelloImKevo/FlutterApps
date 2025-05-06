@@ -48,9 +48,14 @@ class NewsDbProvider {
 
   Future<int> addItem(ItemModel item) async {
     final db = await database;
+
+    // Preprocess the item to convert boolean values to integers
+    final itemMap =
+        convertBooleansToIntegers(item.toJson(), ['deleted', 'dead']);
+
     return await db.insert(
       itemsTableName,
-      item.toJson(),
+      itemMap,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }

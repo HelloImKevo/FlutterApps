@@ -10,3 +10,14 @@ Map<String, dynamic> preprocessDbMap(
   }
   return map;
 }
+
+/// Converts a map's boolean fields to integers for SQLite compatibility.
+Map<String, dynamic> convertBooleansToIntegers(
+    Map<String, dynamic> map, List<String> booleanFields) {
+  for (final field in booleanFields) {
+    if (map.containsKey(field)) {
+      map[field] = map[field] == true ? 1 : 0;
+    }
+  }
+  return map;
+}
