@@ -31,7 +31,7 @@ class NewsDbProvider {
   Future<ItemModel?> fetchItem(int id) async {
     final db = await database;
     final maps = await db.query(
-      'Items',
+      itemsTableName,
       columns: null,
       where: 'id = ?',
       whereArgs: [id],
@@ -47,7 +47,7 @@ class NewsDbProvider {
   Future<int> addItem(ItemModel item) async {
     final db = await database;
     return await db.insert(
-      'Items',
+      itemsTableName,
       item.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

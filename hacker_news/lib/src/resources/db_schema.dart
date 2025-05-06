@@ -1,3 +1,6 @@
+/// The name of the `Items` table in the database.
+const String itemsTableName = 'Items';
+
 /// SQL statement to create the `Items` table.
 ///
 /// This table is modeled after the HackerNews API and includes the following columns:
