@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 import 'package:logger/logger.dart';
-import '../models/item_model.dart';
+import 'package:hacker_news/src/models/item_model.dart';
 
 const String _baseUrl = 'https://hacker-news.firebaseio.com/v0';
 

@@ -3,8 +3,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'dart:async';
-import '../models/item_model.dart';
-import 'db_schema.dart';
+import 'package:hacker_news/src/models/item_model.dart';
+import 'package:hacker_news/src/infrastructure/database/db_schema.dart';
+import 'package:hacker_news/src/infrastructure/database/db_utils.dart';
 
 class NewsDbProvider {
   Database? _db;
@@ -38,7 +39,8 @@ class NewsDbProvider {
     );
 
     if (maps.isNotEmpty) {
-      return ItemModel.fromJson(maps.first);
+      final map = preprocessDbMap(maps.first, ['deleted', 'dead']);
+      return ItemModel.fromJson(map);
     }
 
     return null;
