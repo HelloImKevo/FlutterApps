@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hacker_news/src/resources/news_api_provider.dart';
+import 'package:hacker_news/src/infrastructure/network/news_api_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'dart:convert';
@@ -13,7 +13,7 @@ import 'dart:convert';
 /// ### From the Command Line:
 /// Use the following command to run all tests in this file:
 /// ```
-/// flutter test test/src/resources/news_api_provider_test.dart
+/// flutter test test/src/infrastructure/network/news_api_provider_test.dart
 /// ```
 ///
 /// ### From Visual Studio Code:
