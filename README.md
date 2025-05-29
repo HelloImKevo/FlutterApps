@@ -286,6 +286,95 @@ By using the BLoC pattern, you can keep your business logic separate from your U
 more modular, testable, and maintainable.
 
 
+# Hacker News API Architecture
+
+```mermaid
+classDiagram
+    class NewsRepository {
+        -NewsDataSource dbProvider
+        -NewsDataSource apiProvider
+        -TopIdsSource topIdsSource
+        -ItemCache itemCache
+        -Logger logger
+        +fetchTopIds()
+        +fetchItem(id)
+        +fetchItems(ids)
+        +clearCache()
+    }
+    
+    class NewsDataSource {
+        <<interface>>
+        +fetchItem(id) ItemModel?
+    }
+    
+    class TopIdsSource {
+        <<interface>>
+        +fetchTopIds() List~int~
+    }
+    
+    class ItemCache {
+        <<interface>>
+        +addItem(item) int
+        +clearCache() void
+    }
+    
+    class NewsApiProvider {
+        -http.Client client
+        +fetchTopIds() List~int~
+        +fetchItem(id) ItemModel?
+    }
+    
+    class NewsDbProvider {
+        -Database? _db
+        +database Database
+        +fetchItem(id) ItemModel?
+        +addItem(item) int
+        +clearCache() void
+    }
+    
+    class MockNewsDbProvider {
+        -Map~int, Map~ _itemsCache
+        +database MockDatabase
+        +fetchItem(id) ItemModel?
+        +addItem(item) int
+        +clearCache() void
+        +clear() void
+    }
+    
+    class MockDatabase {
+        -Map~int, Map~ _itemsCache
+        +delete(table) int
+    }
+    
+    class ItemModel {
+        +id int
+        +deleted bool?
+        +type String?
+        ... other properties ...
+        +fromJson(json) ItemModel
+        +toJson() Map~String, dynamic~
+    }
+    
+    NewsRepository --> NewsDataSource : uses
+    NewsRepository --> TopIdsSource : uses
+    NewsRepository --> ItemCache : uses
+    
+    NewsApiProvider ..|> NewsDataSource : implements
+    NewsApiProvider ..|> TopIdsSource : implements
+    
+    NewsDbProvider ..|> NewsDataSource : implements
+    NewsDbProvider ..|> ItemCache : implements
+    
+    MockNewsDbProvider ..|> NewsDataSource : implements
+    MockNewsDbProvider ..|> ItemCache : implements
+    MockNewsDbProvider --> MockDatabase : uses
+    
+    NewsApiProvider ..> ItemModel : creates/uses
+    NewsDbProvider ..> ItemModel : creates/uses
+    MockNewsDbProvider ..> ItemModel : creates/uses
+```
+
+
 # Live Action Screenshots
 
 |                     Cat Animation                   |
