@@ -16,4 +16,7 @@ abstract class TopIdsSource {
 abstract class ItemCache {
   /// Adds an item to the cache
   Future<int> addItem(ItemModel item);
+
+  /// Clears all items from the cache
+  Future<void> clearCache();
 }

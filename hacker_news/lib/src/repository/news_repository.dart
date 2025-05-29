@@ -2,7 +2,6 @@ import 'package:hacker_news/src/infrastructure/database/news_db_provider.dart';
 import 'package:hacker_news/src/infrastructure/network/news_api_provider.dart';
 import 'package:hacker_news/src/models/item_model.dart';
 import 'package:hacker_news/src/repository/news_datasource.dart';
-import 'package:hacker_news/src/infrastructure/database/db_schema.dart'; // Added for itemsTableName
 import 'package:logger/logger.dart';
 
 /// A repository that coordinates access to news data from various sources.
@@ -13,11 +12,17 @@ class NewsRepository implements NewsDataSource, TopIdsSource {
   // Log tag constant for consistent logging
   static const String logTag = 'NewsRepository';
 
-  final NewsDbProvider dbProvider;
-  final NewsApiProvider apiProvider;
+  final NewsDataSource dbProvider;
+  final NewsDataSource apiProvider;
+  final TopIdsSource topIdsSource;
+  final ItemCache itemCache;
   final Logger logger = Logger();
 
-  NewsRepository({required this.dbProvider, required this.apiProvider});
+  NewsRepository({
+    required this.dbProvider,
+    required this.apiProvider,
+  })  : topIdsSource = apiProvider as TopIdsSource,
+        itemCache = dbProvider as ItemCache;
 
   /// Singleton instance of the repository
   static final NewsRepository _instance = NewsRepository(
@@ -32,7 +37,7 @@ class NewsRepository implements NewsDataSource, TopIdsSource {
   Future<List<int>> fetchTopIds() async {
     logger.d('$logTag: Fetching top IDs from API');
     // We always fetch top IDs from the API to ensure they're up to date
-    return await apiProvider.fetchTopIds();
+    return await topIdsSource.fetchTopIds();
   }
 
   @override
@@ -52,7 +57,7 @@ class NewsRepository implements NewsDataSource, TopIdsSource {
     // If we got an item from the API, store it in the database
     if (item != null) {
       logger.d('$logTag: Caching item $id in database');
-      await dbProvider.addItem(item);
+      await itemCache.addItem(item);
     } else {
       logger.d('$logTag: Item $id not found in API');
     }
@@ -76,8 +81,7 @@ class NewsRepository implements NewsDataSource, TopIdsSource {
 
   /// Clears the database cache
   Future<void> clearCache() async {
-    final db = await dbProvider.database;
-    await db.delete(itemsTableName);
+    await itemCache.clearCache();
     logger.d('$logTag: Cache cleared');
   }
 }

@@ -60,4 +60,10 @@ class NewsDbProvider implements NewsDataSource, ItemCache {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
+  @override
+  Future<void> clearCache() async {
+    final db = await database;
+    await db.delete(itemsTableName);
+  }
 }
