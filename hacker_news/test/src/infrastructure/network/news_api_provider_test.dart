@@ -65,7 +65,9 @@ void main() {
 
       final item = await apiProvider.fetchItem(1);
 
-      expect(item.id, 1);
+      // Add null assertion since we expect a valid item in success case
+      expect(item, isNotNull);
+      expect(item!.id, 1);
       expect(item.title, 'Test Item');
       expect(item.by, 'author');
       expect(item.time, 1234567890);

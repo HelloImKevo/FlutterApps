@@ -1,13 +1,12 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-import 'dart:io';
 import 'dart:async';
 import 'package:hacker_news/src/models/item_model.dart';
 import 'package:hacker_news/src/infrastructure/database/db_schema.dart';
 import 'package:hacker_news/src/infrastructure/database/db_utils.dart';
+import 'package:hacker_news/src/repository/news_datasource.dart';
 
-class NewsDbProvider {
+class NewsDbProvider implements NewsDataSource, ItemCache {
   Database? _db;
 
   Future<Database> get database async {
@@ -29,6 +28,7 @@ class NewsDbProvider {
     );
   }
 
+  @override
   Future<ItemModel?> fetchItem(int id) async {
     final db = await database;
     final maps = await db.query(
@@ -46,6 +46,7 @@ class NewsDbProvider {
     return null;
   }
 
+  @override
   Future<int> addItem(ItemModel item) async {
     final db = await database;
 
