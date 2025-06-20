@@ -1,12 +1,40 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hacker_news/src/repository/news_repository.dart';
 import 'package:hacker_news/src/infrastructure/network/news_api_provider.dart';
+import 'package:hacker_news/src/models/item_model.dart';
+import 'package:hacker_news/src/repository/news_datasource.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'dart:convert';
 import '../../helpers/mock_news_db_provider.dart';
 
+/// A test implementation of NewsDataSource that returns predefined items
+class _TestSecondarySource implements NewsDataSource {
+  final Map<int, ItemModel> _items = {};
+
+  _TestSecondarySource(ItemModel item) {
+    _items[item.id] = item;
+  }
+
+  @override
+  Future<ItemModel?> fetchItem(int id) async {
+    return _items[id];
+  }
+}
+
 /// Tests for the NewsRepository class that validate the caching mechanism.
+///
+/// ### Running the Tests
+///
+/// - **From the Command Line**:
+///   Run the following command in the terminal:
+///   ```bash
+///   flutter test test/src/repository/news_repository_test.dart
+///   ```
+///
+/// - **From Visual Studio Code**:
+///   Open the `news_repository_test.dart` file, then click the `Run` or `Debug` button
+///   above each test or at the top of the file.
 ///
 /// These tests ensure that:
 /// 1. The repository correctly fetches data from API when not in the database
@@ -27,6 +55,7 @@ void main() {
       repository = NewsRepository(
         dbProvider: dbProvider,
         apiProvider: apiProvider,
+        secondarySources: [],
       );
     });
 
@@ -119,6 +148,41 @@ void main() {
       // Verify the item is no longer in the cache
       final clearedItem = await dbProvider.fetchItem(123);
       expect(clearedItem, isNull);
+    });
+
+    test('fetches from secondary sources when not found in primary sources',
+        () async {
+      // Create a test secondary source with predefined data
+      final secondarySource = _TestSecondarySource(ItemModel(
+        id: 999,
+        title: 'Secondary Source Story',
+        type: 'story',
+      ));
+
+      // Create a repository with the secondary source
+      final repositoryWithSecondary = NewsRepository(
+        dbProvider: dbProvider,
+        apiProvider: apiProvider,
+        secondarySources: [secondarySource],
+      );
+
+      // Mock client that returns 404 for the primary API
+      final mockClient = MockClient((request) {
+        return Future.value(http.Response('Not found', 404));
+      });
+      apiProvider.client = mockClient;
+
+      // Fetch item - should come from secondary source
+      final item = await repositoryWithSecondary.fetchItem(999);
+
+      // Verify item was found in secondary source
+      expect(item, isNotNull);
+      expect(item?.id, 999);
+      expect(item?.title, 'Secondary Source Story');
+
+      // Verify item was cached
+      final cachedItem = await dbProvider.fetchItem(999);
+      expect(cachedItem?.id, 999);
     });
   });
 }

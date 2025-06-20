@@ -74,9 +74,19 @@ void main() {
       expect(item.kids, [2, 3, 4]);
     });
 
-    test('fetchItem throws an exception on failure', () async {
+    test('fetchItem returns null for 404 responses', () async {
       final mockClient = MockClient((request) async {
-        return http.Response('Error', 404);
+        return http.Response('Not Found', 404);
+      });
+      apiProvider.client = mockClient;
+
+      final item = await apiProvider.fetchItem(1);
+      expect(item, isNull);
+    });
+
+    test('fetchItem throws an exception on other error responses', () async {
+      final mockClient = MockClient((request) async {
+        return http.Response('Server Error', 500);
       });
       apiProvider.client = mockClient;
 

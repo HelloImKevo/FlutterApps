@@ -13,7 +13,7 @@ abstract class TopIdsSource {
 }
 
 /// Abstract interface for sources that can store items
-abstract class ItemCache {
+abstract class NewsItemCache {
   /// Adds an item to the cache
   Future<int> addItem(ItemModel item);
 

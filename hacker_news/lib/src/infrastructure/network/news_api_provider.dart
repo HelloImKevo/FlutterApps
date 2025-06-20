@@ -34,6 +34,13 @@ class NewsApiProvider implements NewsDataSource, TopIdsSource {
     String url = '$_baseUrl/item/$id.json';
     final response = await client.get(Uri.parse(url));
 
+    // Return null for 404 responses - item not found
+    if (response.statusCode == 404) {
+      logger.d('fetchItem -> Item not found: $id');
+      return null;
+    }
+
+    // Throw exception for other error responses
     if (response.statusCode != 200) {
       throw Exception('Failed to fetch item with id: $id');
     }

@@ -27,7 +27,7 @@ class MockDatabase {
 ///
 /// This class avoids the dependency on path_provider and sqflite packages
 /// that cause MissingPluginException in tests.
-class MockNewsDbProvider implements NewsDataSource, ItemCache {
+class MockNewsDbProvider implements NewsDataSource, NewsItemCache {
   // In-memory cache to simulate database
   final Map<int, Map<String, dynamic>> _itemsCache = {};
 

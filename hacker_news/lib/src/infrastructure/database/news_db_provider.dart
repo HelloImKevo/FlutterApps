@@ -6,7 +6,7 @@ import 'package:hacker_news/src/infrastructure/database/db_schema.dart';
 import 'package:hacker_news/src/infrastructure/database/db_utils.dart';
 import 'package:hacker_news/src/repository/news_datasource.dart';
 
-class NewsDbProvider implements NewsDataSource, ItemCache {
+class NewsDbProvider implements NewsDataSource, NewsItemCache {
   Database? _db;
 
   Future<Database> get database async {
