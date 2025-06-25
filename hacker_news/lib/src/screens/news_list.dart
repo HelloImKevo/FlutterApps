@@ -32,9 +32,18 @@ class NewsList extends StatelessWidget {
           return FutureBuilder(
             future: getFuture(),
             builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? Text('Im visible $index')
-                  : Text('I havent fetched data yet $index');
+              return Card(
+                elevation: 3.0,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  height: 60.0,
+                  child: snapshot.hasData
+                      ? Text('Im visible $index')
+                      : Text('I havent fetched data yet $index'),
+                ),
+              );
             },
           );
         },
