@@ -5,9 +5,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:hacker_news/src/app.dart';
 
-// TODO: This strategy only works for Android emulators currently.
-//  We'll still get a runtime SocketException when running as a
-//  macOS desktop deployment. Reference emulator command:
+// TODO: This strategy works for Android emulators and macOS desktop deployments.
+//  For production builds, consider implementing proper certificate validation.
+//  Reference emulator command:
 //  emulator -avd PAX_A920_Galaxy_Nexus_API_29 -netdelay none -netspeed full
 //  flutter run -d macos
 class DebugSSLHandshakeHttpOverrides extends HttpOverrides {

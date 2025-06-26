@@ -286,6 +286,134 @@ By using the BLoC pattern, you can keep your business logic separate from your U
 more modular, testable, and maintainable.
 
 
+## macOS Network Entitlements for Flutter Apps
+
+When developing Flutter apps for macOS desktop deployment, you may encounter network permission errors 
+that prevent your app from making HTTP requests. This is due to macOS's App Sandbox security model, 
+which requires explicit permissions for network access.
+
+### Common Error Symptoms
+
+If your app fails to make network requests on macOS, you might see errors like:
+```
+ClientException with SocketException: Connection failed 
+(OS Error: Operation not permitted, errno = 1), 
+address = example.com, port = 443
+```
+
+This error occurs even when:
+- The same URL works fine in a web browser
+- Network connectivity is available
+- The app works on other platforms (iOS, Android, Web)
+
+### Root Cause: macOS App Sandbox
+
+macOS uses a security feature called **App Sandbox** that restricts what applications can do on the 
+system. By default, sandboxed apps cannot:
+- Access the network
+- Read/write files outside their container
+- Access system resources
+- Communicate with other applications
+
+Flutter apps built for macOS are automatically sandboxed and require explicit **entitlements** to 
+perform restricted operations like network requests.
+
+### Solution: Network Client Entitlements
+
+To fix network permission issues, you need to add the `com.apple.security.network.client` entitlement 
+to your macOS app configuration.
+
+#### 1. Debug/Development Entitlements
+
+Edit `macos/Runner/DebugProfile.entitlements`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.cs.allow-jit</key>
+	<true/>
+	<key>com.apple.security.network.server</key>
+	<true/>
+	<!-- Add this line for outgoing network requests -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>
+```
+
+#### 2. Release/Production Entitlements
+
+Edit `macos/Runner/Release.entitlements`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<!-- Add this line for outgoing network requests -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>
+```
+
+#### 3. Clean Build Required
+
+After modifying entitlements, you must clean and rebuild your app:
+
+```bash
+flutter clean
+flutter pub get
+flutter run -d macos
+```
+
+### Understanding Entitlements
+
+| Entitlement Key | Purpose | When Needed |
+|---|---|---|
+| `com.apple.security.app-sandbox` | Enables App Sandbox | Always present in Flutter macOS apps |
+| `com.apple.security.network.client` | Allows outgoing network connections | HTTP requests, API calls, downloading |
+| `com.apple.security.network.server` | Allows incoming network connections | Local servers, peer-to-peer communication |
+| `com.apple.security.cs.allow-jit` | Allows Just-In-Time compilation | Debug builds, development |
+| `com.apple.security.files.user-selected.read-write` | File system access | File picker, document editing |
+
+### Best Practices
+
+1. **Minimal Permissions**: Only request entitlements your app actually needs
+2. **Different Configs**: Use more restrictive entitlements for Release builds
+3. **Testing**: Test both Debug and Release builds to ensure entitlements are correct
+4. **Documentation**: Document why each entitlement is needed for future reference
+
+### Troubleshooting Tips
+
+- **Clean Build**: Always run `flutter clean` after changing entitlements
+- **Check Both Files**: Ensure both DebugProfile.entitlements and Release.entitlements are updated
+- **Simulator vs Device**: Entitlements behave the same on both simulator and physical devices
+- **App Store**: Additional entitlements may be required for App Store distribution
+
+### Security Considerations
+
+The App Sandbox provides important security benefits:
+- **Principle of Least Privilege**: Apps only get permissions they explicitly request
+- **User Protection**: Malicious apps cannot access network/files without explicit permission
+- **System Integrity**: Sandboxed apps cannot modify system files or other applications
+
+While it's tempting to disable sandboxing entirely, it's recommended to work within the sandbox 
+model and request only the specific entitlements your app requires.
+
+### Additional Resources
+
+- [Apple's App Sandbox Documentation](https://developer.apple.com/documentation/security/app_sandbox)
+- [Entitlements Key Reference](https://developer.apple.com/documentation/bundleresources/entitlements)
+- [Flutter macOS Desktop Support](https://docs.flutter.dev/platform-integration/macos/building)
+
+
 # Hacker News API Architecture
 
 ```mermaid
