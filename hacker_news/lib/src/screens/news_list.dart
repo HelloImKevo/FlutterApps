@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hacker_news/src/blocs/stories_provider.dart';
 import 'package:hacker_news/src/models/item_model.dart';
+import 'package:hacker_news/src/widgets/widgets.dart';
 
 /// The main screen that displays a scrollable list of Hacker News stories.
 ///
@@ -178,179 +179,38 @@ class _NewsListState extends State<NewsList> {
 
   /// Creates a single news story item for display in the list.
   ///
-  /// Each story is displayed as a **Card** (a Material Design component that
-  /// looks like a piece of paper with a subtle shadow). Inside the card is
-  /// a **ListTile** which provides a standard layout for list items.
-  ///
-  /// **What's displayed:**
-  /// - **Title** - The story headline (bold text)
-  /// - **Author** - Who posted the story
-  /// - **Score** - How many upvotes the story has received
-  /// - **Domain** - The website where the story was published (if available)
-  ///
-  /// **Interaction:**
-  /// When tapped, it calls `_handleStoryTap` to show a preview or open the link.
+  /// This method now uses the extracted StoryListItem widget for better
+  /// code organization and reusability.
   Widget _buildStoryItem(ItemModel story, int index) {
-    return Card(
-      elevation: 2.0,
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
-        title: Text(
-          story.title ?? 'No Title',
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16.0,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8.0),
-            Text(
-              'by ${story.by ?? 'Unknown'} • ${story.score ?? 0} points',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14.0,
-              ),
-            ),
-            if (story.url != null) ...[
-              const SizedBox(height: 4.0),
-              Text(
-                _extractDomain(story.url!),
-                style: TextStyle(
-                  color: Colors.blue[600],
-                  fontSize: 12.0,
-                ),
-              ),
-            ],
-          ],
-        ),
-        onTap: () => _handleStoryTap(story),
-      ),
+    return StoryListItem(
+      story: story,
+      index: index,
+      onTap: () => _handleStoryTap(story),
     );
   }
 
   /// Shows a loading screen while stories are being downloaded.
   ///
-  /// This method creates two different states:
-  /// 1. **Loading** - Shows a spinning circle and "Loading..." text
-  /// 2. **No Stories** - Shows "No stories available" if nothing loaded
-  ///
-  /// **StreamBuilder pattern:**
-  /// We use another StreamBuilder here to listen specifically to the loading
-  /// state. This allows us to show/hide the loading spinner in real-time
-  /// as the app downloads stories from the internet.
-  ///
-  /// **Why we check `isLoading`:**
-  /// The loading state helps users understand that something is happening
-  /// behind the scenes. Without it, they might think the app is broken
-  /// when it's actually just downloading data.
+  /// This method now uses the extracted LoadingStateWidget for better
+  /// code organization and reusability.
   Widget _buildLoadingWidget(bloc) {
-    return StreamBuilder<bool>(
-      stream: bloc.loading,
-      builder: (context, snapshot) {
-        final isLoading = snapshot.data ?? false;
-
-        if (isLoading) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16.0),
-                Text('Loading top stories...'),
-              ],
-            ),
-          );
-        }
-
-        return const Center(
-          child: Text('No stories available'),
-        );
-      },
+    return LoadingStateWidget(
+      loadingStream: bloc.loading,
     );
   }
 
   /// Displays an error message when something goes wrong.
   ///
-  /// This screen appears when:
-  /// - The internet connection is lost
-  /// - The Hacker News API is down
-  /// - There's a bug in our code
-  /// - The device can't connect to the server
-  ///
-  /// **User-friendly error handling:**
-  /// Instead of showing cryptic error codes, we show:
-  /// - A clear error icon (red exclamation mark)
-  /// - A simple message: "Failed to load stories"
-  /// - The technical error details (for debugging)
-  /// - A "Retry" button to try loading again
-  ///
-  /// **The Retry button:**
-  /// When pressed, it calls `bloc.refresh()` which clears any cached data
-  /// and tries to download fresh stories from the API.
+  /// This method now uses the extracted ErrorStateWidget for better
+  /// code organization and reusability.
   Widget _buildErrorWidget(String error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64.0,
-              color: Colors.red,
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Failed to load stories',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                final bloc = StoriesProvider.of(context);
-                bloc.refresh();
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+    return ErrorStateWidget(
+      error: error,
+      onRetry: () {
+        final bloc = StoriesProvider.of(context);
+        bloc.refresh();
+      },
     );
-  }
-
-  /// Extracts the domain name from a full URL.
-  ///
-  /// **Example:**
-  /// - Input: "https://www.example.com/article/123?ref=homepage"
-  /// - Output: "www.example.com"
-  ///
-  /// **Why we do this:**
-  /// Full URLs can be very long and ugly in the UI. By showing just the
-  /// domain, users can quickly see which website the story comes from
-  /// without cluttering the interface.
-  ///
-  /// **Error handling:**
-  /// If the URL is malformed or can't be parsed, we just return the
-  /// original URL instead of crashing the app.
-  String _extractDomain(String url) {
-    try {
-      final uri = Uri.parse(url);
-      return uri.host;
-    } catch (e) {
-      return url;
-    }
   }
 
   /// Handles what happens when a user taps on a story.
