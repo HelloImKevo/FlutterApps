@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'package:hacker_news/src/repository/news_repository.dart';
+import 'package:hacker_news/src/repository/enhanced_news_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/item_model.dart';
 import 'package:logger/logger.dart';
 
 class StoriesBloc {
   final logger = Logger();
-  final NewsRepository _repository = NewsRepository.getInstance();
+  final EnhancedNewsRepository _repository =
+      EnhancedNewsRepository.getInstance();
 
   /// Manages the ordered list of top story IDs from HackerNews API
   final _topIdsController = BehaviorSubject<List<int>>.seeded(<int>[]);
@@ -61,23 +62,32 @@ class StoriesBloc {
     }
   }
 
-  /// Fetches story items by their IDs
+  /// Fetches story items by their IDs using enhanced batch fetching
   Future<void> _fetchStories(List<int> ids) async {
     try {
-      logger.d('StoriesBloc: Fetching ${ids.length} stories');
+      logger.d(
+          'StoriesBloc: Fetching ${ids.length} stories with enhanced repository');
       final currentItems = Map<int, ItemModel>.from(_itemsController.value);
 
-      for (final id in ids) {
-        if (!currentItems.containsKey(id)) {
-          final item = await _repository.fetchItem(id);
-          if (item != null) {
-            currentItems[id] = item;
-            _itemsController.add(Map.from(currentItems));
-          }
-        }
-      }
+      // Filter out already cached items
+      final uncachedIds =
+          ids.where((id) => !currentItems.containsKey(id)).toList();
 
-      logger.d('StoriesBloc: Fetched ${currentItems.length} stories total');
+      if (uncachedIds.isNotEmpty) {
+        // Use batch fetching for better performance
+        final fetchedItems = await _repository.fetchItems(uncachedIds);
+
+        // Add fetched items to current map
+        for (final item in fetchedItems) {
+          currentItems[item.id] = item;
+        }
+
+        _itemsController.add(Map.from(currentItems));
+        logger.d(
+            'StoriesBloc: Fetched ${fetchedItems.length} new stories, ${currentItems.length} total');
+      } else {
+        logger.d('StoriesBloc: All ${ids.length} stories already cached');
+      }
     } catch (e) {
       logger.e('StoriesBloc: Error fetching stories: $e');
       _errorController.add('Failed to fetch stories: $e');
@@ -108,12 +118,38 @@ class StoriesBloc {
   /// Clears the cache
   Future<void> clearCache() async {
     try {
-      await _repository.clearCache();
+      await _repository.clearAllCaches();
       _itemsController.add(<int, ItemModel>{});
       logger.d('StoriesBloc: Cache cleared');
     } catch (e) {
       logger.e('StoriesBloc: Error clearing cache: $e');
-      _errorController.add('Failed to cache: $e');
+      _errorController.add('Failed to clear cache: $e');
+    }
+  }
+
+  /// Clears only the memory cache (keeps database cache)
+  void clearMemoryCache() {
+    _repository.clearMemoryCache();
+    logger.d('StoriesBloc: Memory cache cleared');
+  }
+
+  /// Gets performance statistics from the enhanced repository
+  CachePerformanceStats get performanceStats => _repository.performanceStats;
+
+  /// Performs maintenance on the caches
+  void performCacheMaintenance() {
+    _repository.performMaintenance();
+    logger.d('StoriesBloc: Cache maintenance performed');
+  }
+
+  /// Warms the cache with priority story IDs
+  Future<void> warmCache(List<int> priorityIds) async {
+    try {
+      logger.d(
+          'StoriesBloc: Warming cache with ${priorityIds.length} priority items');
+      await _repository.warmCache(priorityIds);
+    } catch (e) {
+      logger.e('StoriesBloc: Error warming cache: $e');
     }
   }
 
