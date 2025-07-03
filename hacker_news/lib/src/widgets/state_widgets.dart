@@ -31,7 +31,7 @@ class LoadingStateWidget extends StatelessWidget {
     if (loadingStream != null) {
       return StreamBuilder<bool>(
         stream: loadingStream,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<bool> snapshot) {
           final isLoading = snapshot.data ?? false;
 
           if (isLoading) {

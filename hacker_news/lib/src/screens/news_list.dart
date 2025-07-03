@@ -134,7 +134,7 @@ class _NewsListState extends State<NewsList> {
       ),
       body: StreamBuilder<List<ItemModel>>(
         stream: bloc.stories,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<List<ItemModel>> snapshot) {
           if (snapshot.hasError) {
             return _buildErrorWidget(snapshot.error.toString());
           }
