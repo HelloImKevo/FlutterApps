@@ -66,15 +66,21 @@ class StoriesBloc {
     try {
       logger.d('StoriesBloc: Fetching ${ids.length} stories');
       final currentItems = Map<int, ItemModel>.from(_itemsController.value);
+      bool hasNewItems = false;
 
       for (final id in ids) {
         if (!currentItems.containsKey(id)) {
           final item = await _repository.fetchItem(id);
           if (item != null) {
             currentItems[id] = item;
-            _itemsController.add(Map.from(currentItems));
+            hasNewItems = true;
           }
         }
+      }
+
+      // Only emit if we actually have new items
+      if (hasNewItems) {
+        _itemsController.add(Map.from(currentItems));
       }
 
       logger.d('StoriesBloc: Fetched ${currentItems.length} stories total');
