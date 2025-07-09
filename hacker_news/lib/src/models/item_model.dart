@@ -39,15 +39,19 @@ class ItemModel {
   });
 
   /// Factory constructor to create an `ItemModel` from a JSON map.
+  ///
+  /// Null values in JSON are preserved as null in the model, which is
+  /// semantically correct for the HackerNews API where missing fields
+  /// have meaning (e.g., deleted: null means "not deleted").
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
       id: json['id'],
-      deleted: json['deleted'],
+      deleted: json['deleted'], // null means "not deleted"
       type: json['type'],
       by: json['by'],
       time: json['time'],
-      text: json['text'],
-      dead: json['dead'],
+      text: json['text'], // null means "no text content"
+      dead: json['dead'], // null means "not dead"
       parent: json['parent'],
       kids: (json['kids'] as List<dynamic>?)?.cast<int>(),
       url: json['url'],
