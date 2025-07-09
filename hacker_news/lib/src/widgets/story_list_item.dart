@@ -69,6 +69,26 @@ class StoryListItem extends StatelessWidget {
             ],
           ],
         ),
+        trailing: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.comment,
+              color: Colors.grey[600],
+              size: 24.0,
+            ),
+            const SizedBox(height: 4.0),
+            Text(
+              '${story.descendants ?? 0}',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
         onTap: onTap,
       ),
     );
