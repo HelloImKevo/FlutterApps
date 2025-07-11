@@ -505,6 +505,14 @@ classDiagram
 
 # Live Action Screenshots
 
+|                     Hacker News 1                     |
+|:-----------------------------------------------------:|
+| <img src="screenshots/hacker-news-1.png" width="400"> |
+
+|                     Hacker News 2                     |
+|:-----------------------------------------------------:|
+| <img src="screenshots/hacker-news-2.png" width="400"> |
+
 |                     Cat Animation                   |
 |:---------------------------------------------------:|
 |  ![Cat Animation](screenshots/cat-animation-1.png)  |
