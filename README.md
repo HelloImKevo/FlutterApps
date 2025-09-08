@@ -14,6 +14,29 @@ DartPad: A lightweight web-app for building simple Dart programs.
 https://dartpad.dev/  
 
 
+# Flutter Installation & Setup
+
+https://docs.flutter.dev/get-started/install/macos/desktop  
+
+```bash
+brew install --cask flutter
+```
+
+```bash
+sudo softwareupdate --install-rosetta --agree-to-license
+
+sudo sh -c 'xcode-select -s /Applications/Xcode.app/Contents/Developer && xcodebuild -runFirstLaunch'
+
+sudo xcodebuild -license
+```
+
+## CocoaPods Installation:
+
+```bash
+sudo gem install cocoapods
+```
+
+
 # Flutter Helpful References
 
 ## flutter devices
