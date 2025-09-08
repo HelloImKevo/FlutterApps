@@ -14,8 +14,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+    with TickerProviderStateMixin {
+  late AnimationController _uiAnimationController;
+  late AnimationController _waveAnimationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<Offset> _slideAnimation;
@@ -28,8 +29,15 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _initializeAnimations() {
-    _animationController = AnimationController(
+    // UI Animation Controller - runs once for splash screen elements
+    _uiAnimationController = AnimationController(
       duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+
+    // Wave Animation Controller - loops continuously for background waves
+    _waveAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
 
@@ -37,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _uiAnimationController,
       curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
     ));
 
@@ -45,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
       begin: 0.8,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _uiAnimationController,
       curve: const Interval(0.2, 0.7, curve: Curves.elasticOut),
     ));
 
@@ -53,11 +61,15 @@ class _SplashScreenState extends State<SplashScreen>
       begin: const Offset(0, 0.5),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _uiAnimationController,
       curve: const Interval(0.3, 0.8, curve: Curves.easeOutBack),
     ));
 
-    _animationController.forward();
+    // Start UI animation once
+    _uiAnimationController.forward();
+
+    // Start wave animation and make it repeat continuously
+    _waveAnimationController.repeat();
   }
 
   Future<void> _startInitialization() async {
@@ -70,7 +82,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _uiAnimationController.dispose();
+    _waveAnimationController.dispose();
     super.dispose();
   }
 
@@ -78,66 +91,81 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryBlue,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.primaryBlue,
-              AppColors.primaryBlueDark,
-              AppColors.accentNavy,
-            ],
-            stops: [0.0, 0.6, 1.0],
+      body: Stack(
+        children: [
+          // Animated wave background
+          Positioned.fill(
+            child: CustomPaint(
+              painter: WaveBackgroundPainter(
+                animation: _waveAnimationController,
+                waveColor: AppColors.accentCyan,
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Responsive flex distribution based on available height
-              final bool isCompactHeight = constraints.maxHeight < 600;
+          // Static gradient overlay for depth
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.primaryBlue.withOpacity(0.8),
+                  AppColors.primaryBlueDark.withOpacity(0.9),
+                  AppColors.accentNavy.withOpacity(0.95),
+                ],
+                stops: const [0.0, 0.6, 1.0],
+              ),
+            ),
+          ),
+          // Main content
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Responsive flex distribution based on available height
+                final bool isCompactHeight = constraints.maxHeight < 600;
 
-              return Column(
-                children: [
-                  Expanded(
-                    flex: isCompactHeight ? 2 : 3,
-                    child: Center(
-                      child: AnimatedBuilder(
-                        animation: _animationController,
-                        builder: (context, child) {
-                          return FadeTransition(
-                            opacity: _fadeAnimation,
-                            child: ScaleTransition(
-                              scale: _scaleAnimation,
-                              child: _buildLogo(isCompact: isCompactHeight),
-                            ),
-                          );
-                        },
+                return Column(
+                  children: [
+                    Expanded(
+                      flex: isCompactHeight ? 2 : 3,
+                      child: Center(
+                        child: AnimatedBuilder(
+                          animation: _uiAnimationController,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _fadeAnimation,
+                              child: ScaleTransition(
+                                scale: _scaleAnimation,
+                                child: _buildLogo(isCompact: isCompactHeight),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: isCompactHeight ? 3 : 2,
-                    child: SlideTransition(
-                      position: _slideAnimation,
+                    Expanded(
+                      flex: isCompactHeight ? 3 : 2,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: _buildContent(isCompact: isCompactHeight),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
                       child: FadeTransition(
                         opacity: _fadeAnimation,
-                        child: _buildContent(isCompact: isCompactHeight),
+                        child: _buildLoadingIndicator(),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: _buildLoadingIndicator(),
-                    ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -339,16 +367,62 @@ class WaveBackgroundPainter extends CustomPainter {
       ..color = waveColor.withOpacity(0.1)
       ..style = PaintingStyle.fill;
 
+    final double animationValue = animation.value * 2 * math.pi;
+
+    // Draw first wave layer (bottom)
+    _drawWave(
+      canvas,
+      size,
+      paint,
+      animationValue,
+      waveHeight: 25.0,
+      yOffset: size.height - 120,
+      waveLength: size.width / 3.5,
+      opacity: 0.15,
+    );
+
+    // Draw second wave layer (middle)
+    _drawWave(
+      canvas,
+      size,
+      paint,
+      -animationValue * 0.8,
+      waveHeight: 20.0,
+      yOffset: size.height - 95,
+      waveLength: size.width / 4.5,
+      opacity: 0.12,
+    );
+
+    // Draw third wave layer (top)
+    _drawWave(
+      canvas,
+      size,
+      paint,
+      animationValue * 1.2,
+      waveHeight: 15.0,
+      yOffset: size.height - 70,
+      waveLength: size.width / 5.5,
+      opacity: 0.08,
+    );
+  }
+
+  void _drawWave(
+    Canvas canvas,
+    Size size,
+    Paint paint,
+    double animationValue, {
+    required double waveHeight,
+    required double yOffset,
+    required double waveLength,
+    required double opacity,
+  }) {
     final Path path = Path();
-    final double waveHeight = 20.0;
-    final double waveLength = size.width / 4;
-    final double animationValue = animation.value * 2 * 3.14159265359;
+    paint.color = waveColor.withOpacity(opacity);
 
     path.moveTo(0, size.height);
 
-    for (double x = 0; x <= size.width; x += 1) {
-      final double y = size.height -
-          100 +
+    for (double x = 0; x <= size.width; x += 2) {
+      final double y = yOffset +
           waveHeight *
               math.sin((x / waveLength) * 2 * math.pi + animationValue);
       path.lineTo(x, y);
@@ -358,25 +432,6 @@ class WaveBackgroundPainter extends CustomPainter {
     path.close();
 
     canvas.drawPath(path, paint);
-
-    // Draw second wave
-    final Path path2 = Path();
-    path2.moveTo(0, size.height);
-
-    for (double x = 0; x <= size.width; x += 1) {
-      final double y = size.height -
-          80 +
-          waveHeight *
-              0.7 *
-              math.sin((x / (waveLength * 1.5)) * 2 * math.pi - animationValue);
-      path2.lineTo(x, y);
-    }
-
-    path2.lineTo(size.width, size.height);
-    path2.close();
-
-    paint.color = waveColor.withOpacity(0.08);
-    canvas.drawPath(path2, paint);
   }
 
   @override
