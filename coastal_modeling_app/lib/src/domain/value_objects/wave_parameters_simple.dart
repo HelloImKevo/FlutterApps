@@ -155,57 +155,6 @@ class WaveParameters {
     return significantWaveHeight / wavelength;
   }
 
-  /// Determines if waves are in deep, intermediate, or shallow water
-  WaterDepthRegime get depthRegime {
-    final double k = 2 * math.pi / wavelength;
-    final double kh = k * waterDepth;
-
-    if (kh > math.pi) {
-      return WaterDepthRegime.deep;
-    } else if (kh > math.pi / 10) {
-      return WaterDepthRegime.intermediate;
-    } else {
-      return WaterDepthRegime.shallow;
-    }
-  }
-
-  /// Checks if waves are likely to break based on steepness
-  bool get shouldBreak {
-    if (isBreaking) return true;
-
-    // Deep water breaking criterion
-    if (depthRegime == WaterDepthRegime.deep) {
-      return waveSteepness > 0.142; // H/L > 1/7
-    }
-
-    // Shallow water breaking criterion (depth-limited)
-    final double brekerIndex = significantWaveHeight / waterDepth;
-    return brekerIndex > 0.78; // γ > 0.78
-  }
-
-  /// Creates a copy with breaking status updated
-  WaveParameters withBreakingStatus() {
-    return copyWith(isBreaking: shouldBreak);
-  }
-
-  /// Converts to deep water equivalent parameters
-  WaveParameters toDeepWater() {
-    if (depthRegime == WaterDepthRegime.deep) return this;
-
-    // Shoaling coefficient calculation
-    final double k = 2 * math.pi / wavelength;
-    final double kh = k * waterDepth;
-    final double ks = math.sqrt(2 * kh / _sinh(2 * kh));
-
-    // Deep water wave height
-    final double deepWaterHeight = significantWaveHeight / ks;
-
-    return copyWith(
-      significantWaveHeight: deepWaterHeight,
-      waterDepth: double.infinity,
-    );
-  }
-
   /// Formats wave parameters for display
   String get formatted {
     return 'Hs: ${significantWaveHeight.toStringAsFixed(2)}m, '
@@ -222,13 +171,6 @@ class WaveParameters {
   double _sinh(double x) {
     return (math.exp(x) - math.exp(-x)) / 2.0;
   }
-}
-
-/// Enumeration for water depth regimes
-enum WaterDepthRegime {
-  deep,
-  intermediate,
-  shallow,
 }
 
 /// Factory for creating common wave parameter instances
@@ -261,42 +203,6 @@ class WaveParametersFactory {
       significantWaveHeight: 4.0,
       peakPeriod: 10.0,
       meanDirection: 90.0,
-      waterDepth: waterDepth,
-    );
-  }
-
-  /// Creates storm conditions
-  static WaveParameters storm({double waterDepth = 20.0}) {
-    return WaveParameters(
-      significantWaveHeight: 8.0,
-      peakPeriod: 14.0,
-      meanDirection: 90.0,
-      waterDepth: waterDepth,
-    );
-  }
-
-  /// Creates hurricane conditions
-  static WaveParameters hurricane({double waterDepth = 25.0}) {
-    return WaveParameters(
-      significantWaveHeight: 15.0,
-      peakPeriod: 18.0,
-      meanDirection: 90.0,
-      waterDepth: waterDepth,
-      isBreaking: true,
-    );
-  }
-
-  /// Creates parameters from NDBC buoy data format
-  static WaveParameters fromNDBCData({
-    required double waveHeight,
-    required double dominantPeriod,
-    required double meanDirection,
-    required double waterDepth,
-  }) {
-    return WaveParameters(
-      significantWaveHeight: waveHeight,
-      peakPeriod: dominantPeriod,
-      meanDirection: meanDirection,
       waterDepth: waterDepth,
     );
   }

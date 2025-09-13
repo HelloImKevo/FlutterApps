@@ -54,6 +54,13 @@ Chrome (web)                         â€¢ chrome                               â€
 ```
 
 ## flutter run
+
+### Quick Reference:
+
+```bash
+flutter run -d macos
+```
+
 Build and run the Flutter app, on a target platform:
 ```
 flutter run

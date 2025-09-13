@@ -11,7 +11,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:coastal_modeling_app/main.dart';
 
 void main() {
-  testWidgets('Coastal Modeling App loads properly', (WidgetTester tester) async {
+  testWidgets('Coastal Modeling App loads properly',
+      (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const CoastalModelingApp());
 
@@ -21,5 +22,9 @@ void main() {
 
     // Verify that the loading indicator is present
     expect(find.text('Initializing coastal models...'), findsOneWidget);
+
+    // Wait for any pending timers to complete and pump one more frame
+    // This handles the splash screen's navigation timer
+    await tester.pumpAndSettle(const Duration(seconds: 3));
   });
 }

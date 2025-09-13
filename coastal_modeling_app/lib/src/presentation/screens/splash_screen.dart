@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../design_system/design_system.dart';
+import '../../core/navigation/app_router.dart';
 
 /// Splash screen displayed during app initialization
 ///
@@ -74,10 +75,12 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _startInitialization() async {
     // Simulate initialization tasks
-    await Future.delayed(const Duration(milliseconds: 2500));
+    await Future.delayed(const Duration(milliseconds: 5000));
 
-    // TODO: Navigate to main dashboard once implemented
-    // Navigator.of(context).pushReplacementNamed('/dashboard');
+    // Navigate to main dashboard
+    if (mounted) {
+      AppRouter.pushReplacementNamed(context, AppRouter.dashboard);
+    }
   }
 
   @override

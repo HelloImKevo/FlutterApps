@@ -4,7 +4,7 @@ import '../typography/app_typography.dart';
 import '../spacing/app_spacing.dart';
 
 /// Defines the application theme for the Coastal Modeling Application
-/// 
+///
 /// This class provides comprehensive theming including light and dark themes,
 /// component themes, and specialized themes for data visualization components.
 class AppTheme {
@@ -16,7 +16,7 @@ class AppTheme {
       // Base theme properties
       useMaterial3: true,
       brightness: Brightness.light,
-      
+
       // Color scheme
       colorScheme: const ColorScheme.light(
         primary: AppColors.primaryBlue,
@@ -30,9 +30,9 @@ class AppTheme {
         tertiary: AppColors.accentCyan,
         onTertiary: AppColors.charcoal,
         surface: AppColors.white,
-        onSurface: AppColors.textPrimary,
+        onSurface: AppColors.black, // Black text on white surfaces
         background: AppColors.backgroundPrimary,
-        onBackground: AppColors.textPrimary,
+        onBackground: AppColors.black, // Black text on backgrounds
         error: AppColors.error,
         onError: AppColors.white,
         outline: AppColors.borderMedium,
@@ -62,7 +62,7 @@ class AppTheme {
 
       // Card theme
       cardTheme: CardThemeData(
-        color: AppColors.surfaceCard,
+        color: AppColors.white, // Ensure white background for accessibility
         elevation: AppSpacing.elevationLow,
         shape: RoundedRectangleBorder(
           borderRadius: AppSpacing.borderRadiusMd,
@@ -110,15 +110,15 @@ class AppTheme {
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.backgroundSecondary,
+        fillColor: AppColors.white, // White background for accessibility
         contentPadding: AppSpacing.formPadding,
         border: OutlineInputBorder(
           borderRadius: AppSpacing.borderRadiusMd,
-          borderSide: const BorderSide(color: AppColors.borderLight),
+          borderSide: const BorderSide(color: AppColors.borderMedium),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppSpacing.borderRadiusMd,
-          borderSide: const BorderSide(color: AppColors.borderLight),
+          borderSide: const BorderSide(color: AppColors.borderMedium),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppSpacing.borderRadiusMd,
@@ -128,10 +128,10 @@ class AppTheme {
           borderRadius: AppSpacing.borderRadiusMd,
           borderSide: const BorderSide(color: AppColors.error),
         ),
-        labelStyle: AppTypography.labelMedium.withColor(AppColors.textSecondary),
-        hintStyle: AppTypography.bodyMedium.withColor(AppColors.textTertiary),
+        labelStyle: AppTypography.labelMedium.withColor(AppColors.charcoal),
+        hintStyle: AppTypography.bodyMedium.withColor(AppColors.darkGray),
         errorStyle: AppTypography.errorText.withColor(AppColors.error),
-        helperStyle: AppTypography.helperText.withColor(AppColors.textTertiary),
+        helperStyle: AppTypography.helperText.withColor(AppColors.darkGray),
       ),
 
       // Icon theme
@@ -150,9 +150,11 @@ class AppTheme {
       // List tile theme
       listTileTheme: ListTileThemeData(
         contentPadding: AppSpacing.contentPadding,
-        titleTextStyle: AppTypography.titleMedium,
-        subtitleTextStyle: AppTypography.bodySmall,
-        iconColor: AppColors.textSecondary,
+        titleTextStyle: AppTypography.titleMedium
+            .copyWith(color: AppColors.black), // Black titles
+        subtitleTextStyle: AppTypography.bodySmall
+            .copyWith(color: AppColors.charcoal), // Dark gray subtitles
+        iconColor: AppColors.primaryBlue, // Blue icons for better visibility
       ),
 
       // Chip theme
@@ -172,8 +174,10 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: AppSpacing.borderRadiusLg,
         ),
-        titleTextStyle: AppTypography.headlineSmall.withColor(AppColors.textPrimary),
-        contentTextStyle: AppTypography.bodyMedium.withColor(AppColors.textSecondary),
+        titleTextStyle:
+            AppTypography.headlineSmall.withColor(AppColors.textPrimary),
+        contentTextStyle:
+            AppTypography.bodyMedium.withColor(AppColors.textSecondary),
       ),
 
       // Bottom navigation bar theme
@@ -285,23 +289,33 @@ class AppTheme {
         padding: AppSpacing.all8,
       ),
 
-      // Text theme
+      // Text theme with accessibility-focused colors
       textTheme: TextTheme(
-        displayLarge: AppTypography.displayLarge,
-        displayMedium: AppTypography.displayMedium,
-        displaySmall: AppTypography.displaySmall,
-        headlineLarge: AppTypography.headlineLarge,
-        headlineMedium: AppTypography.headlineMedium,
-        headlineSmall: AppTypography.headlineSmall,
-        titleLarge: AppTypography.titleLarge,
-        titleMedium: AppTypography.titleMedium,
-        titleSmall: AppTypography.titleSmall,
-        bodyLarge: AppTypography.bodyLarge,
-        bodyMedium: AppTypography.bodyMedium,
-        bodySmall: AppTypography.bodySmall,
-        labelLarge: AppTypography.labelLarge,
-        labelMedium: AppTypography.labelMedium,
-        labelSmall: AppTypography.labelSmall,
+        displayLarge:
+            AppTypography.displayLarge.copyWith(color: AppColors.black),
+        displayMedium:
+            AppTypography.displayMedium.copyWith(color: AppColors.black),
+        displaySmall:
+            AppTypography.displaySmall.copyWith(color: AppColors.black),
+        headlineLarge:
+            AppTypography.headlineLarge.copyWith(color: AppColors.black),
+        headlineMedium:
+            AppTypography.headlineMedium.copyWith(color: AppColors.black),
+        headlineSmall:
+            AppTypography.headlineSmall.copyWith(color: AppColors.black),
+        titleLarge: AppTypography.titleLarge.copyWith(color: AppColors.black),
+        titleMedium: AppTypography.titleMedium.copyWith(color: AppColors.black),
+        titleSmall: AppTypography.titleSmall.copyWith(color: AppColors.black),
+        bodyLarge: AppTypography.bodyLarge.copyWith(color: AppColors.charcoal),
+        bodyMedium:
+            AppTypography.bodyMedium.copyWith(color: AppColors.charcoal),
+        bodySmall: AppTypography.bodySmall.copyWith(color: AppColors.charcoal),
+        labelLarge:
+            AppTypography.labelLarge.copyWith(color: AppColors.charcoal),
+        labelMedium:
+            AppTypography.labelMedium.copyWith(color: AppColors.charcoal),
+        labelSmall:
+            AppTypography.labelSmall.copyWith(color: AppColors.darkGray),
       ),
     );
   }
@@ -311,7 +325,6 @@ class AppTheme {
     return lightTheme.copyWith(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.backgroundDark,
-      
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primaryBlueLight,
         onPrimary: AppColors.charcoal,
@@ -332,7 +345,6 @@ class AppTheme {
         outline: AppColors.mediumGray,
         shadow: AppColors.black,
       ),
-
       cardTheme: CardThemeData(
         color: AppColors.charcoal,
         elevation: AppSpacing.elevationLow,
@@ -341,7 +353,6 @@ class AppTheme {
         ),
         margin: AppSpacing.all8,
       ),
-
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.charcoal,
         foregroundColor: AppColors.white,
@@ -354,7 +365,6 @@ class AppTheme {
           color: AppColors.white,
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkGray,
@@ -369,7 +379,8 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppSpacing.borderRadiusMd,
-          borderSide: const BorderSide(color: AppColors.primaryBlueLight, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.primaryBlueLight, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppSpacing.borderRadiusMd,
@@ -383,16 +394,79 @@ class AppTheme {
     );
   }
 
+  /// High contrast theme for accessibility
+  static ThemeData get highContrastTheme {
+    return lightTheme.copyWith(
+      brightness: Brightness.light,
+      colorScheme: const ColorScheme.light(
+        primary: AppColors.highContrastPrimary,
+        onPrimary: AppColors.highContrastBackground,
+        secondary: AppColors.highContrastSecondary,
+        onSecondary: AppColors.highContrastBackground,
+        surface: AppColors.highContrastBackground,
+        onSurface: AppColors.highContrastText,
+        background: AppColors.highContrastBackground,
+        onBackground: AppColors.highContrastText,
+        error: AppColors.highContrastError,
+        onError: AppColors.highContrastBackground,
+      ),
+      cardTheme: CardThemeData(
+        color: AppColors.highContrastBackground,
+        elevation: AppSpacing.elevationMedium,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppSpacing.borderRadiusMd,
+          side: const BorderSide(color: AppColors.highContrastText, width: 2),
+        ),
+      ),
+      textTheme: TextTheme(
+        displayLarge: AppTypography.displayLarge.copyWith(
+          color: AppColors.highContrastText,
+          fontWeight: FontWeight.w800,
+        ),
+        headlineLarge: AppTypography.headlineLarge.copyWith(
+          color: AppColors.highContrastText,
+          fontWeight: FontWeight.w700,
+        ),
+        titleMedium: AppTypography.titleMedium.copyWith(
+          color: AppColors.highContrastText,
+          fontWeight: FontWeight.w700,
+        ),
+        bodyMedium: AppTypography.bodyMedium.copyWith(
+          color: AppColors.highContrastText,
+        ),
+      ),
+    );
+  }
+
   /// Theme for data visualization components
   static ThemeData getDataVisualizationTheme(BuildContext context) {
     final baseTheme = Theme.of(context);
+    final isHighContrast = MediaQuery.of(context).highContrast;
+
     return baseTheme.copyWith(
       // Custom theme overrides for charts and graphs
       colorScheme: baseTheme.colorScheme.copyWith(
-        primary: AppColors.primaryBlue,
-        secondary: AppColors.secondaryTeal,
-        tertiary: AppColors.accentCyan,
+        primary: isHighContrast
+            ? AppColors.highContrastPrimary
+            : AppColors.primaryBlue,
+        secondary: isHighContrast
+            ? AppColors.highContrastSecondary
+            : AppColors.secondaryTeal,
+        tertiary: isHighContrast
+            ? AppColors.highContrastSecondary
+            : AppColors.accentCyan,
       ),
     );
+  }
+
+  /// Gets the appropriate theme based on system accessibility settings
+  static ThemeData getAdaptiveTheme(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
+    if (mediaQuery.highContrast) {
+      return highContrastTheme;
+    }
+
+    return lightTheme;
   }
 }

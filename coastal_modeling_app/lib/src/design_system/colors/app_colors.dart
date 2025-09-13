@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Defines the color palette for the Coastal Modeling Application
-/// 
+///
 /// This class provides a consistent color scheme inspired by coastal environments,
 /// featuring ocean blues, sandy beiges, and natural earth tones that reflect
 /// the marine and coastal engineering domain.
@@ -10,8 +10,10 @@ class AppColors {
 
   // Primary Colors - Ocean Blues
   static const Color primaryBlue = Color(0xFF1E3A8A); // Deep ocean blue
-  static const Color primaryBlueDark = Color(0xFF1E40AF); // Darker blue for contrast
-  static const Color primaryBlueLight = Color(0xFF3B82F6); // Lighter blue for highlights
+  static const Color primaryBlueDark =
+      Color(0xFF1E40AF); // Darker blue for contrast
+  static const Color primaryBlueLight =
+      Color(0xFF3B82F6); // Lighter blue for highlights
 
   // Secondary Colors - Coastal Tones
   static const Color secondaryTeal = Color(0xFF0891B2); // Tropical water teal
@@ -21,12 +23,12 @@ class AppColors {
   // Accent Colors - Wave and Foam
   static const Color accentCyan = Color(0xFF22D3EE); // Wave crest cyan
   static const Color accentNavy = Color(0xFF1E293B); // Deep sea navy
-  
+
   // Natural Colors - Beach and Earth
   static const Color sandBeige = Color(0xFFF5F5DC); // Beach sand
   static const Color driftwood = Color(0xFF8B7355); // Weathered wood
   static const Color seafoam = Color(0xFFE0F7FA); // Light sea foam
-  
+
   // Status Colors
   static const Color success = Color(0xFF10B981); // Emerald green
   static const Color warning = Color(0xFFF59E0B); // Amber warning
@@ -63,6 +65,21 @@ class AppColors {
   static const Color textTertiary = mediumGray;
   static const Color textInverse = white;
   static const Color textDisabled = mediumGray;
+
+  // Card-specific text colors for accessibility compliance
+  static const Color cardTextOnLight = charcoal; // High contrast on light cards
+  static const Color cardTextOnDark = white; // High contrast on dark cards
+  static const Color cardTextOnPrimary = white; // Text on primary colored cards
+  static const Color cardTextOnSecondary =
+      white; // Text on secondary colored cards
+
+  // Icon colors for sufficient contrast
+  static const Color iconOnLight = primaryBlue; // Icons on light backgrounds
+  static const Color iconOnDark = white; // Icons on dark backgrounds
+  static const Color iconOnPrimary =
+      white; // Icons on primary colored backgrounds
+  static const Color iconOnSecondary =
+      white; // Icons on secondary colored backgrounds
 
   // Data Visualization Colors
   static const List<Color> chartColors = [
@@ -138,4 +155,49 @@ class AppColors {
 
   /// Primary color swatch for Material Theme
   static final MaterialColor primarySwatch = createMaterialColor(primaryBlue);
+
+  /// Accessibility helper methods
+
+  /// Gets appropriate text color for the given background color
+  static Color getTextColorForBackground(Color backgroundColor) {
+    // Calculate luminance to determine if background is light or dark
+    final luminance = backgroundColor.computeLuminance();
+
+    // Use white text on dark backgrounds, dark text on light backgrounds
+    // Threshold of 0.5 provides good contrast in most cases
+    return luminance > 0.5 ? textPrimary : textInverse;
+  }
+
+  /// Gets appropriate icon color for the given background color
+  static Color getIconColorForBackground(Color backgroundColor) {
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? iconOnLight : iconOnDark;
+  }
+
+  /// Validates if color combination meets WCAG AA contrast ratio (4.5:1)
+  static bool meetsWCAGContrast(Color foreground, Color background) {
+    final double contrastRatio =
+        _calculateContrastRatio(foreground, background);
+    return contrastRatio >= 4.5; // WCAG AA standard
+  }
+
+  /// Calculates contrast ratio between two colors
+  static double _calculateContrastRatio(Color color1, Color color2) {
+    final double luminance1 = color1.computeLuminance();
+    final double luminance2 = color2.computeLuminance();
+
+    final double lighter = luminance1 > luminance2 ? luminance1 : luminance2;
+    final double darker = luminance1 > luminance2 ? luminance2 : luminance1;
+
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  /// High contrast color variants for accessibility
+  static const Color highContrastPrimary = Color(0xFF000080); // Navy blue
+  static const Color highContrastSecondary = Color(0xFF800080); // Purple
+  static const Color highContrastSuccess = Color(0xFF006400); // Dark green
+  static const Color highContrastWarning = Color(0xFF8B4513); // Saddle brown
+  static const Color highContrastError = Color(0xFF8B0000); // Dark red
+  static const Color highContrastText = Color(0xFF000000); // Pure black
+  static const Color highContrastBackground = Color(0xFFFFFFFF); // Pure white
 }
